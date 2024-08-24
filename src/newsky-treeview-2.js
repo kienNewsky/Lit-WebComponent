@@ -153,6 +153,10 @@ export class LitTreeView extends LitElement {
     }
   }
 
+  newNode() {
+    this.dispatchEvent(new CustomEvent('create-newnode', {detail: {currNode: this.selectedNode}}))
+  }
+
   removeNodeById(nodes, nodeId) {
     for (let i = 0; i < nodes.length; i++) {
       if (nodes[i].id === nodeId) {
