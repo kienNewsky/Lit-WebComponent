@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <style>
+    body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", sans-serif}
+
+   .w3-bar .w3-button {
+      padding: 16px;
+    }
+    .content {
+      margin-top: 64px; /* Adjust this value according to your navbar height */
+    }
+
+  </style>
+  <title>newsky-table</title>
+</head>
+
+<body>
+
+  <!-- Navbar (sit on top) -->
+  <div class="w3-top">
+    <div class="w3-bar w3-white w3-card" id="myNavbar">
+      <a href="#home" class="w3-bar-item w3-button w3-wide">LOGO</a>
+      <!-- Right-sided navbar links -->
+      <div class="w3-right w3-hide-small">
+        <a href="#about" class="w3-bar-item w3-button">ABOUT</a>
+        <a href="#team" class="w3-bar-item w3-button"><i class="fa fa-user"></i> TEAM</a>
+        <a href="#work" class="w3-bar-item w3-button"><i class="fa fa-th"></i> WORK</a>
+        <a href="#pricing" class="w3-bar-item w3-button"><i class="fa fa-usd"></i> PRICING</a>
+        <a href="#contact" class="w3-bar-item w3-button"><i class="fa fa-envelope"></i> CONTACT</a>
+      </div>
+      <!-- Hide right-floated links on small screens and replace them with a menu icon -->
+
+      <a href="javascript:void(0)" class="w3-bar-item w3-button w3-right w3-hide-large w3-hide-medium" onclick="w3_open()">
+        <i class="fa fa-bars"></i>
+      </a>
+    </div>
+  </div>
+
+<!-- Sidebar on small screens when clicking the menu icon -->
+  <nav class="w3-sidebar w3-bar-block w3-black w3-card w3-animate-left w3-hide-medium w3-hide-large" style="display:none" id="mySidebar">
+    <a href="javascript:void(0)" onclick="w3_close()" class="w3-bar-item w3-button w3-large w3-padding-16">Close ×</a>
+    <a href="#about" onclick="w3_close()" class="w3-bar-item w3-button">ABOUT</a>
+    <a href="#team" onclick="w3_close()" class="w3-bar-item w3-button">TEAM</a>
+    <a href="#work" onclick="w3_close()" class="w3-bar-item w3-button">WORK</a>
+    <a href="#pricing" onclick="w3_close()" class="w3-bar-item w3-button">PRICING</a>
+    <a href="#contact" onclick="w3_close()" class="w3-bar-item w3-button">CONTACT</a>
+  </nav>
+
+
+  <div class="w3-container content">
+    <div class="w3-col m4">
+      <h1>My first Web Component</h1>
+      <newsky-table id="myTable" table-title="My First Component"></newsky-table>
+    </div>
+    <div class="w3-col m4">
+      <newsky-autocomplete id = "myauto"></newsky-autocomplete>
+      <newsky-treeview id = "mytree"></newsky-treeview>
+    </div>
+    <div class="w3-col m4">
+      <lit-tree-view id="tree"></lit-tree-view>
+    </div>
+  </div>
+
+  <script type="module" src="./src/newsky-table.js"></script>
+  <script type="module" src="./src/newsky-autocomplete.js"></script>
+  <script type="module" src="./src/newsky-treeview.js"></script>
+  <script type="module" src="./src/newsky-treeview-2.js"></script>
+  <script>
+    const myTable = document.getElementById('myTable');
+    myTable.data = [
+      { name: 'John Doe', age: 28 },
+      { name: 'Jane Doe', age: 24 },
+      { name: 'Alice', age: 30 },
+      { name: 'Kien', age: 41 },
+      { name: 'Kien', age: 42 },
+      { name: 'Kien', age: 43 },
+      { name: 'Kien', age: 44 },
+      { name: 'Kien', age: 45 },
+      { name: 'Kien', age: 50 },
+      { name: 'Kien', age: 51 },
+      { name: 'Kien', age: 52 },
+      { name: 'Kien', age: 53 },
+      { name: 'Kien', age: 54 },
+      { name: 'Kien', age: 55 },
+      { name: 'Kien', age: 56 },
+      { name: 'Kien', age: 57 },
+      { name: 'Kien', age: 58 },
+      { name: 'Kien', age: 59 },
+    ];
+    myTable.addEventListener("row-click", (item) => { console.log(item.detail) });
+
+    const treeData = [
+  {
+    "id": "1",
+    "catName": "Bán thành phẩm",
+    "isChildOf": null,
+    "children": [
+      {
+        "id": "2",
+        "catName": "BTP - Phay rãnh sàn R2.3-9",
+        "isChildOf": "1",
+        "children": [
+          {
+            "id": "7",
+            "catName": "Sản phẩm con 1",
+            "isChildOf": "2",
+            "children": [
+              {
+                "id": "8",
+                "catName": "Sản phẩm con 2",
+                "isChildOf": "7",
+                "children": []
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "3",
+        "catName": "BTP - Phủ sáp sàn CFL.4-4",
+        "isChildOf": "1",
+        "children": []
+      },
+      {
+        "id": "6",
+        "catName": "BTP - Phay biên dạng R8",
+        "isChildOf": "1",
+        "children": []
+      }
+    ]
+  },
+  {
+    "id": "4",
+    "catName": "Hàng hóa",
+    "isChildOf": null,
+    "children": [
+      {
+        "id": "5",
+        "catName": "Cửa thông phòng",
+        "isChildOf": "4",
+        "children": [
+          {
+            "id": "9",
+            "catName": "Phụ kiện cửa",
+            "isChildOf": "5",
+            "children": []
+          }
+        ]
+      }
+    ]
+  }
+];
+
+  const treeComponent = document.getElementById('tree');
+  treeComponent.treeData = treeData;
+
+  // Listen to custom node-clicked event
+  treeComponent.addEventListener('node-clicked', (e) => {
+    console.log("Node clicked:", e.detail);
+  });
+
+  treeComponent.addEventListener('node-drop', (e) => {
+    console.log('node drop info: ', e.detail)
+  })
+
+  </script>
+
+</body>
+
+</html>
