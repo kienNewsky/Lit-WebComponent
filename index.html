@@ -1,3 +1,4 @@
+<!-- eslint-disable no-console -->
 <!doctype html>
 <html lang="en">
 
@@ -10,11 +11,15 @@
   <style>
     body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", sans-serif}
 
-   .w3-bar .w3-button {
+   /* .w3-bar .w3-button {
       padding: 16px;
-    }
+    } */
     .content {
-      margin-top: 64px; /* Adjust this value according to your navbar height */
+      margin-top: 44px; /* Adjust this value according to your navbar height */
+    }
+    .divider {
+      border-top: 1px solid #bbb;
+      padding: 1px 0;
     }
 
   </style>
@@ -27,16 +32,24 @@
   <div class="w3-top">
     <div class="w3-bar w3-white w3-card" id="myNavbar">
       <a href="#home" class="w3-bar-item w3-button w3-wide">LOGO</a>
-      <!-- Right-sided navbar links -->
-      <div class="w3-right w3-hide-small">
-        <a href="#about" class="w3-bar-item w3-button">ABOUT</a>
-        <a href="#team" class="w3-bar-item w3-button"><i class="fa fa-user"></i> TEAM</a>
-        <a href="#work" class="w3-bar-item w3-button"><i class="fa fa-th"></i> WORK</a>
-        <a href="#pricing" class="w3-bar-item w3-button"><i class="fa fa-usd"></i> PRICING</a>
-        <a href="#contact" class="w3-bar-item w3-button"><i class="fa fa-envelope"></i> CONTACT</a>
-      </div>
-      <!-- Hide right-floated links on small screens and replace them with a menu icon -->
 
+      <div class="w3-dropdown-hover w3-hide-small">
+        <button class="w3-button" title="Notifications">Sản xuất <i class="fa fa-caret-down"></i></button>
+        <div class="w3-dropdown-content w3-card-4 w3-bar-block">
+          <a href="#" class="w3-bar-item w3-button">Các công đoạn</a>
+          <a href="#" class="w3-bar-item w3-button">Định mức</a>
+          <a href="#" class="w3-bar-item w3-button">Kiểm tra khả năng đáp ứng</a>
+          <div class="divider"></div>
+          <a href="#" class="w3-bar-item w3-button">Lên lịch sản xuất</a>
+          <a href="#" class="w3-bar-item w3-button">Xem lịch chạy máy</a>
+          <div class="divider"></div>
+          <a href="#" class="w3-bar-item w3-button">Nhập kết quả sản xuất</a>
+          <a href="#" class="w3-bar-item w3-button">Chốt vật tư cuối ngày</a>
+          <a href="#" class="w3-bar-item w3-button">Kiểm soát hao hụt vật tư</a>
+          <div class="divider"></div>
+          <a href="#" class="w3-bar-item w3-button">Bù trừ nhập xuất theo quy định</a>
+        </div>
+      </div>
       <a href="javascript:void(0)" class="w3-bar-item w3-button w3-right w3-hide-large w3-hide-medium" onclick="w3_open()">
         <i class="fa fa-bars"></i>
       </a>
@@ -60,19 +73,29 @@
       <newsky-table id="myTable" table-title="My First Component"></newsky-table>
     </div>
     <div class="w3-col m4">
-      <newsky-autocomplete id = "myauto"></newsky-autocomplete>
-      <newsky-treeview id = "mytree"></newsky-treeview>
+      <label for="myauto"><strong>Nhân viên phụ trách</strong></label>
+      <newsky-autocomplete id = "myauto" default-value="3"></newsky-autocomplete>
+      <!-- <newsky-treeview id = "mytree"></newsky-treeview> -->
     </div>
     <div class="w3-col m4">
       <lit-tree-view id="tree"></lit-tree-view>
     </div>
   </div>
 
-  <script type="module" src="./src/newsky-table.js"></script>
-  <script type="module" src="./src/newsky-autocomplete.js"></script>
-  <script type="module" src="./src/newsky-treeview.js"></script>
-  <script type="module" src="./src/newsky-treeview-2.js"></script>
+  <script type="module" src="./src/js/component/newsky-table.js"></script>
+  <script type="module" src="./src/js/component/newsky-autocomplete.js"></script>
+  <!-- <script type="module" src="./src/newsky-treeview.js"></script> -->
+  <script type="module" src="./src/js/component/newsky-treeview-2.js"></script>
   <script>
+    var username
+    var sqlHost = "http://123.31.12.44:8080";
+    var token
+
+  </script>
+  <script>
+    const myauto = document.getElementById("myauto");
+    myauto.addEventListener("selection-changed", (data) => console.log("auto complete selected: ", data.detail))
+
     const myTable = document.getElementById('myTable');
     myTable.data = [
       { name: 'John Doe', age: 28 },
@@ -170,6 +193,29 @@
     console.log('node drop info: ', e.detail)
   })
 
+  </script>
+
+  <script>
+    function w3_open() {
+      const x = document.getElementById("mySidebar");
+      x.style.width = "300px";
+      x.style.paddingTop = "10%";
+      x.style.display = "block";
+    }
+
+    // Close side navigation
+    function w3_close() {
+      document.getElementById("mySidebar").style.display = "none";
+    }
+
+    function openNav() {
+      const x = document.getElementById("navDemo");
+      if (x.className.indexOf("w3-show") == -1) {
+        x.className += " w3-show";
+      } else {
+        x.className = x.className.replace(" w3-show", "");
+      }
+    }
   </script>
 
 </body>

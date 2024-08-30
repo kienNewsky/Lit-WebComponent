@@ -1,3 +1,4 @@
+/* eslint-disable eqeqeq */
 /* eslint-disable wc/require-listener-teardown */
 /* eslint-disable class-methods-use-this */
 /* eslint-disable lit-a11y/click-events-have-key-events */
@@ -11,27 +12,46 @@ class AutocompleteComponent extends LitElement {
     showSuggestions: { type: Boolean },
     highlightedIndex: { type: Number },
     maxSuggestions: { type: Number },
+    col1: {type: String, attribute: "col1"},
+    col2: {type: String, attribute: "col2"},
+    defaultValue: {type: String, attribute: "default-value"},
   };
 
   constructor() {
     super();
     this.suggestions = [
-      'Apple',
-      'Banana',
-      'Cherry',
-      'Date',
-      'Fig',
-      'Grape',
-      'Kiwi',
-      'Lemon',
-      'Mango',
-      'Orange',
+      {id: 1, name: 'Apple'},
+      {id: 2, name: 'Banana'},
+      {id: 3, name: 'Cherry'},
+      {id: 4, name: 'Date'},
+      {id: 5, name: 'Fig'},
+      {id: 6, name: 'Grape'},
+      {id: 7, name: 'Kiwi'},
+      {id: 8, name: 'Lemon'},
+      {id: 9, name: 'Mango'},
+      {id: 10, name: 'Orange'},
     ];
-    this.filteredSuggestions = [];
+    this.filteredSuggestions = this.suggestions;
     this.inputValue = '';
     this.showSuggestions = false;
     this.highlightedIndex = -1;
     this.maxSuggestions = 15;  // Default to show 5 suggestions
+    if (!this.col1) {this.col1="id"}
+    if (!this.col2) {this.col2="name"}
+  }
+
+  willUpdate(changedProperties) {
+    if (changedProperties.has("suggestions")) {
+      this.inputValue = "";
+      this.filteredSuggestions = [...this.suggestions];
+      this.showSuggestions = false;
+      this.highlightedIndex = -1;
+    }
+
+    if (changedProperties.has('defaultValue')) {
+      const xx = this.filteredSuggestions.find((item) => item[this.col1].toString() == this.defaultValue)
+      if (xx) {this.inputValue = xx[this.col2]} else {this.inputValue = ''}
+    }
   }
 
   connectedCallback() {
@@ -60,7 +80,7 @@ class AutocompleteComponent extends LitElement {
 
     if (query.length >0) {
       this.filteredSuggestions = this.suggestions
-        .filter(suggestion => suggestion && suggestion.toLowerCase().includes(query))
+        .filter(suggestion => suggestion && suggestion[this.col2].toLowerCase().includes(query))
         .slice(0, this.maxSuggestions);  // Limit the number of suggestions
       this.showSuggestions = true;
       this.highlightedIndex = -1;  // Reset highlight when filtering
@@ -116,10 +136,10 @@ class AutocompleteComponent extends LitElement {
 
 
   selectSuggestion(suggestion) {
-    this.inputValue = suggestion;
+    this.inputValue = suggestion[this.col2];
     this.showSuggestions = false;
-    this.filteredSuggestions = [];
-    this.highlightedIndex = -1;
+    // this.filteredSuggestions = [];
+    this.highlightedIndex = this.filteredSuggestions.findIndex((item) => item[this.col1] == suggestion[this.col1]);
     this.dispatchEvent(new CustomEvent('selection-changed', { detail: suggestion }));
   }
 
@@ -151,7 +171,7 @@ class AutocompleteComponent extends LitElement {
                       class="suggestion-item w3-padding ${this.highlightedIndex === index ? 'highlighted' : ''}"
                       @click="${() => this.selectSuggestion(suggestion)}"
                     >
-                      ${suggestion}
+                      ${suggestion[this.col2]}
                     </div>
                   `
                 )}
