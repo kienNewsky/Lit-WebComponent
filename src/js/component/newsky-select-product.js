@@ -3,6 +3,8 @@
 /* eslint-disable lit-a11y/click-events-have-key-events */
 import { LitElement, html, css } from 'lit';
 import { asyncFetch } from '../core/hook.js';
+import "./newsky-treeview-2.js";
+import "./newsky-autocomplete.js";
 
 class SelectProduct extends LitElement {
   static properties = {
@@ -15,7 +17,8 @@ class SelectProduct extends LitElement {
     productData: {type: Array},
     category: {type: String},
     fetchType: {type: String},
-    query: {type: String}
+    query: {type: String},
+    catRaw: {type: Array},
   }
 
   constructor() {
@@ -59,8 +62,12 @@ class SelectProduct extends LitElement {
         throw new Error(`Response status: ${response.status}`);
       }
       const catdata = await response.json();
+      // console.log(catdata);
+      // const ele = this.shadowRoot.querySelector("newsky-autocomplete");
+      // console.log(ele);
+      // ele.suggestions = [...this.productData];
       if (catdata) this.productData = catdata.map(item => ( {id: item.id, name: item.nameStr} ));
-
+      // console.log(this.productData);
     } catch (e) {
       console.log(e)
     }
@@ -80,17 +87,58 @@ class SelectProduct extends LitElement {
     }
   }
 
-  willUpdate(changedProperties) {
-    if (changedProperties.has("productData")) {
-      const ele = this.shadowRoot.querySelector("newsky-autocomplete");
-      ele.suggestions = [...this.productData];
+  async fetchAllCat() {
+    try {
+      const response = await asyncFetch("GET", window.sqlHost, '/product-service/category', window.token, window.username);
+      if (!response.ok) {
+        throw new Error(`Response status: ${response.status}`);
+      }
+      const data = await response.json();
+      if (data) this.catRaw = [...data];
+      // console.log(this.catRaw)
+
+    } catch (error) {
+      console.log(error)
     }
   }
 
-  firstUpdated() {
-    if (this.defaultValue) {
-      this.fetchFirstCall()
+  willUpdate(changedProperties) {
+    if (changedProperties.has("productData")) {
+      // const ele = this.shadowRoot.querySelector("newsky-autocomplete");
+      // console.log(ele);
+      // ele.suggestions = [...this.productData];
     }
+
+    if (changedProperties.has("defaultValue")) {
+      this.defaultProductUrl = `/product-service/product/${this.defaultValue}`
+      this.initialUrl = `/product-service/product/firstCall/${this.defaultValue}`
+    }
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+    if (this.defaultValue) {
+      this.defaultProductUrl = `/product-service/product/${this.defaultValue}`
+      this.initialUrl = `/product-service/product/firstCall/${this.defaultValue}`
+      this.fetchFirstCall();
+      this.fetchAllCat();
+    }
+  }
+
+  render() {
+    return html`
+      <link href="https://www.w3schools.com/w3css/4/w3.css" rel="stylesheet" />
+      <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
+      <div class="w3-dropdown-hover">Sản phẩm
+        <div class="w3-dropdown-content w3-card-4" style="width:500px; height: 700px; overflow-y: auto;">
+
+          <div class="w3-container">
+            <lit-tree-view .rawData=${this.catRaw}></lit-tree-view>
+          </div>
+        </div>
+      </div>
+      <newsky-autocomplete .suggestions=${this.productData} .defaultValue=${this.defaultValue}></newsky-autocomplete>
+    `
   }
 }
 

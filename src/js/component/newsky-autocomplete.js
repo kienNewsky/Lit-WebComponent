@@ -20,37 +20,57 @@ class AutocompleteComponent extends LitElement {
   constructor() {
     super();
     this.suggestions = [
-      {id: 1, name: 'Apple'},
-      {id: 2, name: 'Banana'},
-      {id: 3, name: 'Cherry'},
-      {id: 4, name: 'Date'},
-      {id: 5, name: 'Fig'},
-      {id: 6, name: 'Grape'},
-      {id: 7, name: 'Kiwi'},
-      {id: 8, name: 'Lemon'},
-      {id: 9, name: 'Mango'},
-      {id: 10, name: 'Orange'},
+      // {id: 1, name: 'Apple'},
+      // {id: 2, name: 'Banana'},
+      // {id: 3, name: 'Cherry'},
+      // {id: 4, name: 'Date'},
+      // {id: 5, name: 'Fig'},
+      // {id: 6, name: 'Grape'},
+      // {id: 7, name: 'Kiwi'},
+      // {id: 8, name: 'Lemon'},
+      // {id: 9, name: 'Mango'},
+      // {id: 10, name: 'Orange'},
     ];
-    this.filteredSuggestions = this.suggestions;
+    if (this.suggestions) {this.filteredSuggestions = this.suggestions;} else {this.filteredSuggestions = []}
     this.inputValue = '';
     this.showSuggestions = false;
     this.highlightedIndex = -1;
-    this.maxSuggestions = 15;  // Default to show 5 suggestions
+    this.maxSuggestions = 1500;  // Default to show 5 suggestions
     if (!this.col1) {this.col1="id"}
     if (!this.col2) {this.col2="name"}
   }
 
+  findDefaultItem() {
+    // const xx = this.filteredSuggestions.find((item) => item[this.col1].toString().toLowerCase() == this.defaultValue.toLowerCase())
+    // if (xx) {
+    //   this.inputValue = xx[this.col2]
+    //   console.log(xx)
+    // } else {this.inputValue = ''}
+
+    const xx = this.filteredSuggestions.findIndex((item) => item[this.col1].toString().toLowerCase() == this.defaultValue.toLowerCase())
+    console.log(xx)
+    if (xx > 0) {
+      const yy = this.filteredSuggestions.at(xx)
+      this.inputValue = yy[this.col2]
+      this.highlightedIndex = xx
+    } else {this.inputValue = ''}
+  }
+
   willUpdate(changedProperties) {
     if (changedProperties.has("suggestions")) {
+
       this.inputValue = "";
       this.filteredSuggestions = [...this.suggestions];
+
+      this.findDefaultItem()
+
+      // console.log(this.filteredSuggestions);
       this.showSuggestions = false;
-      this.highlightedIndex = -1;
+      // this.highlightedIndex = -1;
     }
 
     if (changedProperties.has('defaultValue')) {
-      const xx = this.filteredSuggestions.find((item) => item[this.col1].toString() == this.defaultValue)
-      if (xx) {this.inputValue = xx[this.col2]} else {this.inputValue = ''}
+      if (this.filteredSuggestions.length>0) this.findDefaultItem();
     }
   }
 
@@ -74,14 +94,14 @@ class AutocompleteComponent extends LitElement {
   }
 
   filterSuggestions(event) {
-    const query = event.target.value.toLowerCase();
+    const query = event.target.value;
     // console.log("query ", query);
     this.inputValue = query;
 
     if (query.length >0) {
       this.filteredSuggestions = this.suggestions
-        .filter(suggestion => suggestion && suggestion[this.col2].toLowerCase().includes(query))
-        .slice(0, this.maxSuggestions);  // Limit the number of suggestions
+        .filter(suggestion => suggestion && suggestion[this.col2].toLowerCase().includes(query.toLowerCase()))
+        // .slice(0, this.maxSuggestions);  // Limit the number of suggestions
       this.showSuggestions = true;
       this.highlightedIndex = -1;  // Reset highlight when filtering
     } else {
@@ -162,7 +182,7 @@ class AutocompleteComponent extends LitElement {
           />
           <span class="icon" @click="${() => this.toggleSuggestions()}" data-ignore-outside-click> <i class="fa fa-caret-down"></i> </span>
         </div>
-        ${this.showSuggestions && this.filteredSuggestions.length>0 > 0
+        ${(this.showSuggestions && this.filteredSuggestions.length > 0)
           ? html`
               <div class="suggestions w3-card w3-white">
                 ${this.filteredSuggestions.map(
@@ -206,7 +226,7 @@ class AutocompleteComponent extends LitElement {
     }
 
     .suggestion-item.highlighted {
-      background-color: #f1f1f1;
+      background-color: #e0e0e0;
     }
 
     .suggestion-item:hover {

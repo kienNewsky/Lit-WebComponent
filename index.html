@@ -1,3 +1,4 @@
+<!-- eslint-disable no-var -->
 <!-- eslint-disable no-console -->
 <!doctype html>
 <html lang="en">
@@ -6,14 +7,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <style>
     body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", sans-serif}
-
-   /* .w3-bar .w3-button {
-      padding: 16px;
-    } */
     .content {
       margin-top: 44px; /* Adjust this value according to your navbar height */
     }
@@ -73,125 +70,52 @@
       <newsky-table id="myTable" table-title="My First Component"></newsky-table>
     </div>
     <div class="w3-col m4">
-      <label for="myauto"><strong>Nhân viên phụ trách</strong></label>
-      <newsky-autocomplete id = "myauto" default-value="3"></newsky-autocomplete>
+      <!-- <label for="myauto"><strong>Nhân viên phụ trách</strong></label> -->
+      <!-- <newsky-autocomplete id = "myauto" default-value="3"></newsky-autocomplete> -->
       <!-- <newsky-treeview id = "mytree"></newsky-treeview> -->
+      <newsky-select-product default-value="b997b5ea-614e-41d3-8570-0078c9154447"></newsky-select-product>
     </div>
     <div class="w3-col m4">
-      <lit-tree-view id="tree"></lit-tree-view>
+      <!-- <lit-tree-view id="tree"></lit-tree-view> -->
     </div>
   </div>
 
   <script type="module" src="./src/js/component/newsky-table.js"></script>
-  <script type="module" src="./src/js/component/newsky-autocomplete.js"></script>
+  <!-- <script type="module" src="./src/js/component/newsky-autocomplete.js"></script> -->
   <!-- <script type="module" src="./src/newsky-treeview.js"></script> -->
-  <script type="module" src="./src/js/component/newsky-treeview-2.js"></script>
+  <!-- <script type="module" src="./src/js/component/newsky-treeview-2.js"></script> -->
+   <script type="module" src="./src/js/component/newsky-select-product.js"></script>
+
   <script>
-    var username
+    // eslint-disable-next-line no-var
+    var username = "tung";
     var sqlHost = "http://123.31.12.44:8080";
-    var token
+    var token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0dW5nIiwiaWF0IjoxNzI1NDI0NjcxLCJleHAiOjE3MjU2MDQ2NzF9.cHC2MiCEDuznWZ10tjvkmW6W4bZ1V-lZnbZMGc88HJI";
 
   </script>
   <script>
-    const myauto = document.getElementById("myauto");
-    myauto.addEventListener("selection-changed", (data) => console.log("auto complete selected: ", data.detail))
-
     const myTable = document.getElementById('myTable');
-    myTable.data = [
-      { name: 'John Doe', age: 28 },
-      { name: 'Jane Doe', age: 24 },
-      { name: 'Alice', age: 30 },
-      { name: 'Kien', age: 41 },
-      { name: 'Kien', age: 42 },
-      { name: 'Kien', age: 43 },
-      { name: 'Kien', age: 44 },
-      { name: 'Kien', age: 45 },
-      { name: 'Kien', age: 50 },
-      { name: 'Kien', age: 51 },
-      { name: 'Kien', age: 52 },
-      { name: 'Kien', age: 53 },
-      { name: 'Kien', age: 54 },
-      { name: 'Kien', age: 55 },
-      { name: 'Kien', age: 56 },
-      { name: 'Kien', age: 57 },
-      { name: 'Kien', age: 58 },
-      { name: 'Kien', age: 59 },
-    ];
+        myTable.data = [
+          { name: 'John Doe', age: 28 },
+          { name: 'Jane Doe', age: 24 },
+          { name: 'Alice', age: 30 },
+          { name: 'Kien', age: 41 },
+          { name: 'Kien', age: 42 },
+          { name: 'Kien', age: 43 },
+          { name: 'Kien', age: 44 },
+          { name: 'Kien', age: 45 },
+          { name: 'Kien', age: 50 },
+          { name: 'Kien', age: 51 },
+          { name: 'Kien', age: 52 },
+          { name: 'Kien', age: 53 },
+          { name: 'Kien', age: 54 },
+          { name: 'Kien', age: 55 },
+          { name: 'Kien', age: 56 },
+          { name: 'Kien', age: 57 },
+          { name: 'Kien', age: 58 },
+          { name: 'Kien', age: 59 },
+        ];
     myTable.addEventListener("row-click", (item) => { console.log(item.detail) });
-
-    const treeData = [
-  {
-    "id": "1",
-    "catName": "Bán thành phẩm",
-    "isChildOf": null,
-    "children": [
-      {
-        "id": "2",
-        "catName": "BTP - Phay rãnh sàn R2.3-9",
-        "isChildOf": "1",
-        "children": [
-          {
-            "id": "7",
-            "catName": "Sản phẩm con 1",
-            "isChildOf": "2",
-            "children": [
-              {
-                "id": "8",
-                "catName": "Sản phẩm con 2",
-                "isChildOf": "7",
-                "children": []
-              }
-            ]
-          }
-        ]
-      },
-      {
-        "id": "3",
-        "catName": "BTP - Phủ sáp sàn CFL.4-4",
-        "isChildOf": "1",
-        "children": []
-      },
-      {
-        "id": "6",
-        "catName": "BTP - Phay biên dạng R8",
-        "isChildOf": "1",
-        "children": []
-      }
-    ]
-  },
-  {
-    "id": "4",
-    "catName": "Hàng hóa",
-    "isChildOf": null,
-    "children": [
-      {
-        "id": "5",
-        "catName": "Cửa thông phòng",
-        "isChildOf": "4",
-        "children": [
-          {
-            "id": "9",
-            "catName": "Phụ kiện cửa",
-            "isChildOf": "5",
-            "children": []
-          }
-        ]
-      }
-    ]
-  }
-];
-
-  const treeComponent = document.getElementById('tree');
-  treeComponent.treeData = treeData;
-
-  // Listen to custom node-clicked event
-  treeComponent.addEventListener('node-clicked', (e) => {
-    console.log("Node clicked:", e.detail);
-  });
-
-  treeComponent.addEventListener('node-drop', (e) => {
-    console.log('node drop info: ', e.detail)
-  })
 
   </script>
 
