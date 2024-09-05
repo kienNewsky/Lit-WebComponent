@@ -15,11 +15,18 @@ class SelectProduct extends LitElement {
     categoryUrl: {type: String},
     selectedProduct: {type: Object},
     productData: {type: Array},
-    category: {type: String},
+    categoryId: {type: String},
+    categoryName: {type: String},
     fetchType: {type: String},
     query: {type: String},
     catRaw: {type: Array},
   }
+
+  static styles = css`
+    .hidden {
+      display: none !important;
+    }
+  `
 
   constructor() {
     super();
@@ -32,27 +39,26 @@ class SelectProduct extends LitElement {
       this.initialUrl = ''
     }
 
-    this.category = '';
+    this.categoryId = '';
     this.fetchType = 'category'
     this.query = ''
     this.productData = []
+    this.categoryName = ''
   }
 
-  fetchDefaultProduct() {
-    asyncFetch("GET", window.sqlHost, this.defaultProductUrl, window.token, window.username)
-    .then(response => {
-        if (response.ok) {
-            return response.json()
-        }
-        throw new Error(`Response status: ${response.status}`);
-    })
-    .then(data => {
+  async fetchDefaultProduct() {
+    try {
+      const response = await asyncFetch("GET", window.sqlHost, this.defaultProductUrl, window.token, window.username)
+      if (!response.ok) throw new Error(`Response status: ${response.status}`);
+      const data = await response.json();
       if (data) {
         this.selectedProduct = {id: data.id, name: data.nameStr};
-        this.category = data.extraCategoryID;
+        this.categoryId = data.extraCategoryID;
       }
-    })
-    .catch(e => console.log(e))
+    } catch (error) {
+      console.log(error);
+    }
+
   }
 
   async fetchFirstCall() {
@@ -62,12 +68,7 @@ class SelectProduct extends LitElement {
         throw new Error(`Response status: ${response.status}`);
       }
       const catdata = await response.json();
-      // console.log(catdata);
-      // const ele = this.shadowRoot.querySelector("newsky-autocomplete");
-      // console.log(ele);
-      // ele.suggestions = [...this.productData];
       if (catdata) this.productData = catdata.map(item => ( {id: item.id, name: item.nameStr} ));
-      // console.log(this.productData);
     } catch (e) {
       console.log(e)
     }
@@ -75,7 +76,7 @@ class SelectProduct extends LitElement {
 
   async fetchByCategory() {
     try {
-      const response = await asyncFetch("GET", window.sqlHost, `/product-service/product/byCategoryID/${this.category}`, window.token, window.username)
+      const response = await asyncFetch("GET", window.sqlHost, `/product-service/product/byCategoryID/${this.categoryId}`, window.token, window.username)
       if (!response.ok) {
         throw new Error(`Response status: ${response.status}`);
       }
@@ -94,19 +95,24 @@ class SelectProduct extends LitElement {
         throw new Error(`Response status: ${response.status}`);
       }
       const data = await response.json();
-      if (data) this.catRaw = [...data];
-      // console.log(this.catRaw)
-
+      if (data) {
+        this.catRaw = [...data];
+        if (this.categoryId && this.categoryName.length === 0) {
+          const xx = data.find((element) => element.id.toLowerCase() === this.categoryId.toLowerCase());
+          this.categoryName = xx.catName;
+        }
+      }
     } catch (error) {
       console.log(error)
     }
   }
 
   willUpdate(changedProperties) {
-    if (changedProperties.has("productData")) {
-      // const ele = this.shadowRoot.querySelector("newsky-autocomplete");
-      // console.log(ele);
-      // ele.suggestions = [...this.productData];
+    if (changedProperties.has("categoryId")) {
+      if (this.categoryName.length === 0 && this.categoryId && this.catRaw.length > 0 ) {
+        const xx = this.catRaw.find((element) => element.id.toLowerCase() === this.categoryId.toLowerCase());
+        this.categoryName = xx.catName;
+      }
     }
 
     if (changedProperties.has("defaultValue")) {
@@ -120,24 +126,81 @@ class SelectProduct extends LitElement {
     if (this.defaultValue) {
       this.defaultProductUrl = `/product-service/product/${this.defaultValue}`
       this.initialUrl = `/product-service/product/firstCall/${this.defaultValue}`
+      this.fetchDefaultProduct();
       this.fetchFirstCall();
-      this.fetchAllCat();
     }
+    this.fetchAllCat();
+  }
+
+  firstUpdated() {
+    const dropdown = this.shadowRoot.querySelector('.w3-dropdown-hover');
+    if (dropdown) {
+      dropdown.addEventListener('mouseenter', () => {
+        const dropdownContent = this.shadowRoot.querySelector('.w3-dropdown-content');
+        if (dropdownContent) {
+          // console.log("Cos chay chuot")
+          dropdownContent.classList.remove('hidden'); // Show dropdown on hover
+        }
+      });
+    }
+  }
+
+  async treeViewClick(event) {
+    // console.log(event.detail); // it worked
+    try {
+      this.categoryId = event.detail.id;
+      this.categoryName = event.detail.catName;
+
+      const response = await asyncFetch("GET", window.sqlHost, `/product-service/product/byCategoryID/${event.detail.id}`, window.token, window.username);
+      if (!response.ok) {
+        throw new Error(`Response status: ${response.status}`);
+      }
+      const data = await response.json();
+      if (data) this.productData = data.map(item => ( {id: item.id, name: item.nameStr} ));
+      const xx = this.shadowRoot.querySelector(".w3-dropdown-content");
+      xx.classList.add('hidden');
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  productSelected(event) {
+    // console.log(event.detail);
+    this.selectedProduct = {id: event.detail.id, name: event.detail.name};
+    console.log("selected product: ",this.selectedProduct);
+
+  }
+
+  execQuery(event) {
+    console.log("to query: ", event.detail);
+
+  }
+
+  execRefresh(event) {
+    console.log("To Refresh: ", event.detail);
+
   }
 
   render() {
     return html`
       <link href="https://www.w3schools.com/w3css/4/w3.css" rel="stylesheet" />
       <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
-      <div class="w3-dropdown-hover">Sản phẩm
+      <div class="w3-dropdown-hover">${this.selectedProduct?.id ? html`Sản phẩm <strong>thuộc nhóm ${this.categoryName}</strong>` : html`<span class="w3-text-red">Sản phẩm <strong>thuộc nhóm ${this.categoryName}</strong></span>`}
         <div class="w3-dropdown-content w3-card-4" style="width:500px; height: 700px; overflow-y: auto;">
 
           <div class="w3-container">
-            <lit-tree-view .rawData=${this.catRaw}></lit-tree-view>
+            <lit-tree-view .rawData=${this.catRaw} @node-clicked=${this.treeViewClick}></lit-tree-view>
           </div>
         </div>
       </div>
-      <newsky-autocomplete .suggestions=${this.productData} .defaultValue=${this.defaultValue}></newsky-autocomplete>
+      <newsky-autocomplete
+        .suggestions=${this.productData}
+        .defaultValue=${this.defaultValue}
+        @selection-changed = ${this.productSelected}
+        @launch-query = ${this.execQuery}
+        @launch-refresh = ${this.execRefresh}
+      >
+      </newsky-autocomplete>
     `
   }
 }

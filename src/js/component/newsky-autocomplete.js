@@ -99,6 +99,18 @@ class AutocompleteComponent extends LitElement {
     this.inputValue = query;
 
     if (query.length >0) {
+      if (query.endsWith("++")) {
+        if (query.slice(0,-2).length > 2) {
+          this.dispatchEvent(new CustomEvent('launch-query', {detail: query.slice(0, -2)}));
+        } else {
+          alert("Chỉ tìm kiếm tối thiểu 3 ký tự");
+        }
+          return;
+      }
+      if (query == '**') {
+        this.dispatchEvent(new CustomEvent('launch-refresh', {detail: '**'}));
+        return;
+      }
       this.filteredSuggestions = this.suggestions
         .filter(suggestion => suggestion && suggestion[this.col2].toLowerCase().includes(query.toLowerCase()))
         // .slice(0, this.maxSuggestions);  // Limit the number of suggestions
