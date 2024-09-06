@@ -61,22 +61,36 @@ class SelectProduct extends LitElement {
 
   }
 
-  async fetchFirstCall() {
-    try {
-      const response = await asyncFetch("GET", window.sqlHost, this.initialUrl, window.token, window.username)
-      if (!response.ok) {
-        throw new Error(`Response status: ${response.status}`);
-      }
-      const catdata = await response.json();
-      if (catdata) this.productData = catdata.map(item => ( {id: item.id, name: item.nameStr} ));
-    } catch (e) {
-      console.log(e)
-    }
-  }
+  // async fetchFirstCall() {
+  //   try {
+  //     const response = await asyncFetch("GET", window.sqlHost, this.initialUrl, window.token, window.username)
+  //     if (!response.ok) {
+  //       throw new Error(`Response status: ${response.status}`);
+  //     }
+  //     const catdata = await response.json();
+  //     if (catdata) this.productData = catdata.map(item => ( {id: item.id, name: item.nameStr} ));
+  //   } catch (e) {
+  //     console.log(e)
+  //   }
+  // }
 
-  async fetchByCategory() {
+  // async fetchByCategory() {
+  //   try {
+  //     const response = await asyncFetch("GET", window.sqlHost, `/product-service/product/byCategoryID/${this.categoryId}`, window.token, window.username)
+  //     if (!response.ok) {
+  //       throw new Error(`Response status: ${response.status}`);
+  //     }
+  //     const data = await response.json();
+  //     if (data) this.productData = data.map(item => ( {id: item.id, name: item.nameStr} ));
+
+  //   } catch (e) {
+  //     console.log(e)
+  //   }
+  // }
+
+  async fetchProductList(url) {
     try {
-      const response = await asyncFetch("GET", window.sqlHost, `/product-service/product/byCategoryID/${this.categoryId}`, window.token, window.username)
+      const response = await asyncFetch("GET", window.sqlHost, url, window.token, window.username)
       if (!response.ok) {
         throw new Error(`Response status: ${response.status}`);
       }
@@ -127,7 +141,8 @@ class SelectProduct extends LitElement {
       this.defaultProductUrl = `/product-service/product/${this.defaultValue}`
       this.initialUrl = `/product-service/product/firstCall/${this.defaultValue}`
       this.fetchDefaultProduct();
-      this.fetchFirstCall();
+      // this.fetchFirstCall();
+      this.fetchProductList(this.initialUrl);
     }
     this.fetchAllCat();
   }
@@ -149,14 +164,16 @@ class SelectProduct extends LitElement {
     // console.log(event.detail); // it worked
     try {
       this.categoryId = event.detail.id;
+      this.fetchType = 'category';
       this.categoryName = event.detail.catName;
 
-      const response = await asyncFetch("GET", window.sqlHost, `/product-service/product/byCategoryID/${event.detail.id}`, window.token, window.username);
-      if (!response.ok) {
-        throw new Error(`Response status: ${response.status}`);
-      }
-      const data = await response.json();
-      if (data) this.productData = data.map(item => ( {id: item.id, name: item.nameStr} ));
+      // const response = await asyncFetch("GET", window.sqlHost, `/product-service/product/byCategoryID/${event.detail.id}`, window.token, window.username);
+      // if (!response.ok) {
+      //   throw new Error(`Response status: ${response.status}`);
+      // }
+      // const data = await response.json();
+      // if (data) this.productData = data.map(item => ( {id: item.id, name: item.nameStr} ));
+      this.fetchProductList(`/product-service/product/byCategoryID/${event.detail.id}`);
       const xx = this.shadowRoot.querySelector(".w3-dropdown-content");
       xx.classList.add('hidden');
     } catch (error) {
@@ -172,11 +189,21 @@ class SelectProduct extends LitElement {
   }
 
   execQuery(event) {
+    this.query = event.detail;
+    this.fetchType = 'query';
+    this.fetchProductList(`/product-service/product/byNameStr/${this.query}`);
     console.log("to query: ", event.detail);
 
   }
 
   execRefresh(event) {
+    if (this.fetchType === 'category') {
+      this.fetchProductList(`/product-service/product/byCategoryID/${this.categoryId}`);
+    }
+
+    if (this.fetchType === 'query') {
+      this.fetchProductList(`/product-service/product/byNameStr/${this.query}`);
+    }
     console.log("To Refresh: ", event.detail);
 
   }
