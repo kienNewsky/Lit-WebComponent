@@ -68,7 +68,8 @@ export class LitTreeView extends LitElement {
     treeData: { type: Array },
     selectedNode: { type: Object },
     searchQuery: { type: String },
-    rawData: {type: Array}
+    rawData: { type: Array },
+    catName: { type: String, attribute: 'cat-name' }
   };
 
   constructor() {
@@ -76,6 +77,7 @@ export class LitTreeView extends LitElement {
     this.treeData = [];
     this.selectedNode = null;
     this.searchQuery = '';
+    if (!this.catName) this.catName = 'catName';
   }
 
   willUpdate(changedProperties) {
@@ -111,14 +113,14 @@ export class LitTreeView extends LitElement {
 
   searchHighlight(node) {
     if (this.searchQuery.length > 0) {
-      return node.catName.toLowerCase().includes(this.searchQuery);
+      return node[this.catName].toLowerCase().includes(this.searchQuery);
     }
     return false
   }
   // Drag and Drop
 
   dragStart(e, node) {
-    e.dataTransfer.setData('text/plain', JSON.stringify(node));
+    e.dataTransfer.setData('text/plain', JSON.stringify({ source: "treenode", data: node }));
     this.draggedNode = node;
   }
 
@@ -129,32 +131,40 @@ export class LitTreeView extends LitElement {
 
   drop(e, targetNode) {
     e.preventDefault();
-    const draggedNodeData = JSON.parse(e.dataTransfer.getData('text/plain'));
 
-    // Remove dragged node from its original parent
-    this.removeNodeById(this.treeData, draggedNodeData.id);
-
-    // Add dragged node as a child of the target node
-    // eslint-disable-next-line no-param-reassign
-    targetNode.children = targetNode.children || [];
-    targetNode.children.push(draggedNodeData);
+    const xx = JSON.parse(e.dataTransfer.getData('text/plain'));
+    const draggedNodeData = xx.data;
+    const draggedSource = xx.source;
 
     // console.log("drop data: ", draggedNodeData)
     // console.log("target node: ", targetNode)
 
-    this.dispatchEvent(new CustomEvent('node-drop', {detail: {drag: draggedNodeData, target: targetNode}}))
+    if (draggedSource === 'treenode') {
+      if (draggedNodeData.id === targetNode.id) {
+        return; // drop same node
+      }
+      // Remove dragged node from its original parent
+      this.removeNodeById(this.treeData, draggedNodeData.id);
+
+      // Add dragged node as a child of the target node
+      // eslint-disable-next-line no-param-reassign
+      targetNode.children = targetNode.children || [];
+      targetNode.children.push(draggedNodeData);
+    }
+
+    this.dispatchEvent(new CustomEvent('node-drop', { detail: { sourcce: draggedSource, drag: draggedNodeData, target: targetNode } }))
 
     this.requestUpdate();
   }
 
-  removeNode () {
+  removeNode() {
     if (this.selectedNode !== null) {
       alert(`You are considering remove node: ${JSON.stringify(this.selectedNode)}`);
     }
   }
 
   newNode() {
-    this.dispatchEvent(new CustomEvent('create-newnode', {detail: {currNode: this.selectedNode}}))
+    this.dispatchEvent(new CustomEvent('create-newnode', { detail: { currNode: this.selectedNode } }))
   }
 
   removeNodeById(nodes, nodeId) {
@@ -162,7 +172,7 @@ export class LitTreeView extends LitElement {
       if (nodes[i].id === nodeId) {
         nodes.splice(i, 1);
         return true;
-      // eslint-disable-next-line no-else-return
+        // eslint-disable-next-line no-else-return
       } else if (nodes[i].children && nodes[i].children.length) {
         if (this.removeNodeById(nodes[i].children, nodeId)) {
           return true;
@@ -236,18 +246,18 @@ export class LitTreeView extends LitElement {
 
   renderNodeContent(node) {
     if (this.searchQuery.length > 0) {
-      const matchIndex = node.catName.toLowerCase().indexOf(this.searchQuery);
-      if (matchIndex === -1) return node.catName;
+      const matchIndex = node[this.catName].toLowerCase().indexOf(this.searchQuery);
+      if (matchIndex === -1) return node[this.catName];
 
-      const beforeMatch = node.catName.slice(0, matchIndex);
-      const matchText = node.catName.slice(matchIndex, matchIndex + this.searchQuery.length);
-      const afterMatch = node.catName.slice(matchIndex + this.searchQuery.length);
+      const beforeMatch = node[this.catName].slice(0, matchIndex);
+      const matchText = node[this.catName].slice(matchIndex, matchIndex + this.searchQuery.length);
+      const afterMatch = node[this.catName].slice(matchIndex + this.searchQuery.length);
       // console.log(` ${beforeMatch}<span class="highlight-text">${matchText}</span>${afterMatch}`)
       return html`
         ${beforeMatch}<span class="highlight-text">${matchText}</span>${afterMatch}
       `;
     }
-    return node.catName
+    return node[this.catName]
   }
 
   render() {

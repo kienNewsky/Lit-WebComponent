@@ -12,48 +12,31 @@ class AutocompleteComponent extends LitElement {
     showSuggestions: { type: Boolean },
     highlightedIndex: { type: Number },
     maxSuggestions: { type: Number },
-    col1: {type: String, attribute: "col1"},
-    col2: {type: String, attribute: "col2"},
-    defaultValue: {type: String, attribute: "default-value"},
+    col1: { type: String, attribute: "col1" },
+    col2: { type: String, attribute: "col2" },
+    defaultValue: { type: String, attribute: "default-value" },
   };
 
   constructor() {
     super();
-    this.suggestions = [
-      // {id: 1, name: 'Apple'},
-      // {id: 2, name: 'Banana'},
-      // {id: 3, name: 'Cherry'},
-      // {id: 4, name: 'Date'},
-      // {id: 5, name: 'Fig'},
-      // {id: 6, name: 'Grape'},
-      // {id: 7, name: 'Kiwi'},
-      // {id: 8, name: 'Lemon'},
-      // {id: 9, name: 'Mango'},
-      // {id: 10, name: 'Orange'},
-    ];
-    if (this.suggestions) {this.filteredSuggestions = this.suggestions;} else {this.filteredSuggestions = []}
+    this.suggestions = [];
+    if (this.suggestions) { this.filteredSuggestions = this.suggestions; } else { this.filteredSuggestions = [] }
     this.inputValue = '';
     this.showSuggestions = false;
     this.highlightedIndex = -1;
     this.maxSuggestions = 1500;  // Default to show 5 suggestions
-    if (!this.col1) {this.col1="id"}
-    if (!this.col2) {this.col2="name"}
+    if (!this.col1) { this.col1 = "id" }
+    if (!this.col2) { this.col2 = "name" }
   }
 
   findDefaultItem() {
-    // const xx = this.filteredSuggestions.find((item) => item[this.col1].toString().toLowerCase() == this.defaultValue.toLowerCase())
-    // if (xx) {
-    //   this.inputValue = xx[this.col2]
-    //   console.log(xx)
-    // } else {this.inputValue = ''}
-
     const xx = this.filteredSuggestions.findIndex((item) => item[this.col1].toString().toLowerCase() == this.defaultValue.toLowerCase())
     console.log(xx)
     if (xx > 0) {
       const yy = this.filteredSuggestions.at(xx)
       this.inputValue = yy[this.col2]
       this.highlightedIndex = xx
-    } else {this.inputValue = ''}
+    } else { this.inputValue = '' }
   }
 
   willUpdate(changedProperties) {
@@ -70,7 +53,7 @@ class AutocompleteComponent extends LitElement {
     }
 
     if (changedProperties.has('defaultValue')) {
-      if (this.filteredSuggestions.length>0) this.findDefaultItem();
+      if (this.filteredSuggestions.length > 0) this.findDefaultItem();
     }
   }
 
@@ -98,22 +81,22 @@ class AutocompleteComponent extends LitElement {
     // console.log("query ", query);
     this.inputValue = query;
 
-    if (query.length >0) {
+    if (query.length > 0) {
       if (query.endsWith("++")) {
-        if (query.slice(0,-2).length > 2) {
-          this.dispatchEvent(new CustomEvent('launch-query', {detail: query.slice(0, -2)}));
+        if (query.slice(0, -2).length > 2) {
+          this.dispatchEvent(new CustomEvent('launch-query', { detail: query.slice(0, -2) }));
         } else {
           alert("Chỉ tìm kiếm tối thiểu 3 ký tự");
         }
-          return;
+        return;
       }
       if (query == '**') {
-        this.dispatchEvent(new CustomEvent('launch-refresh', {detail: '**'}));
+        this.dispatchEvent(new CustomEvent('launch-refresh', { detail: '**' }));
         return;
       }
       this.filteredSuggestions = this.suggestions
         .filter(suggestion => suggestion && suggestion[this.col2].toLowerCase().includes(query.toLowerCase()))
-        // .slice(0, this.maxSuggestions);  // Limit the number of suggestions
+      // .slice(0, this.maxSuggestions);  // Limit the number of suggestions
       this.showSuggestions = true;
       this.highlightedIndex = -1;  // Reset highlight when filtering
     } else {
@@ -126,7 +109,7 @@ class AutocompleteComponent extends LitElement {
     switch (event.key) {
       case 'ArrowDown':
         if (this.highlightedIndex < this.filteredSuggestions.length - 1) {
-          this.highlightedIndex +=1;
+          this.highlightedIndex += 1;
           this.updateComplete.then(() => {
             // Scroll the highlighted item into view
             const highlightedElement = this.shadowRoot.querySelector('.highlighted');
@@ -138,7 +121,7 @@ class AutocompleteComponent extends LitElement {
         break;
       case 'ArrowUp':
         if (this.highlightedIndex > 0) {
-          this.highlightedIndex -=1;
+          this.highlightedIndex -= 1;
           this.updateComplete.then(() => {
             // Scroll the highlighted item into view
             const highlightedElement = this.shadowRoot.querySelector('.highlighted');
@@ -195,10 +178,10 @@ class AutocompleteComponent extends LitElement {
           <span class="icon" @click="${() => this.toggleSuggestions()}" data-ignore-outside-click> <i class="fa fa-caret-down"></i> </span>
         </div>
         ${(this.showSuggestions && this.filteredSuggestions.length > 0)
-          ? html`
+        ? html`
               <div class="suggestions w3-card w3-white">
                 ${this.filteredSuggestions.map(
-                  (suggestion, index) => html`
+          (suggestion, index) => html`
                     <div
                       class="suggestion-item w3-padding ${this.highlightedIndex === index ? 'highlighted' : ''}"
                       @click="${() => this.selectSuggestion(suggestion)}"
@@ -206,11 +189,11 @@ class AutocompleteComponent extends LitElement {
                       ${suggestion[this.col2]}
                     </div>
                   `
-                )}
+        )}
               </div>
             `
-          :
-          ''}
+        :
+        ''}
       </div>
 
     `;

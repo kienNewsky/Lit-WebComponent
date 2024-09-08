@@ -8,18 +8,18 @@ import "./newsky-autocomplete.js";
 
 class SelectProduct extends LitElement {
   static properties = {
-    defaultValue: {type: String, attribute: 'default-value'},
-    defaultProductUrl: {type: String},
-    initialUrl: {type: String},
-    queryUrl: {type: String},
-    categoryUrl: {type: String},
-    selectedProduct: {type: Object},
-    productData: {type: Array},
-    categoryId: {type: String},
-    categoryName: {type: String},
-    fetchType: {type: String},
-    query: {type: String},
-    catRaw: {type: Array},
+    defaultValue: { type: String, attribute: 'default-value' },
+    defaultProductUrl: { type: String },
+    initialUrl: { type: String },
+    queryUrl: { type: String },
+    categoryUrl: { type: String },
+    selectedProduct: { type: Object },
+    productData: { type: Array },
+    categoryId: { type: String },
+    categoryName: { type: String },
+    fetchType: { type: String },
+    query: { type: String },
+    catRaw: { type: Array },
   }
 
   static styles = css`
@@ -52,7 +52,7 @@ class SelectProduct extends LitElement {
       if (!response.ok) throw new Error(`Response status: ${response.status}`);
       const data = await response.json();
       if (data) {
-        this.selectedProduct = {id: data.id, name: data.nameStr};
+        this.selectedProduct = { id: data.id, name: data.nameStr };
         this.categoryId = data.extraCategoryID;
       }
     } catch (error) {
@@ -61,33 +61,6 @@ class SelectProduct extends LitElement {
 
   }
 
-  // async fetchFirstCall() {
-  //   try {
-  //     const response = await asyncFetch("GET", window.sqlHost, this.initialUrl, window.token, window.username)
-  //     if (!response.ok) {
-  //       throw new Error(`Response status: ${response.status}`);
-  //     }
-  //     const catdata = await response.json();
-  //     if (catdata) this.productData = catdata.map(item => ( {id: item.id, name: item.nameStr} ));
-  //   } catch (e) {
-  //     console.log(e)
-  //   }
-  // }
-
-  // async fetchByCategory() {
-  //   try {
-  //     const response = await asyncFetch("GET", window.sqlHost, `/product-service/product/byCategoryID/${this.categoryId}`, window.token, window.username)
-  //     if (!response.ok) {
-  //       throw new Error(`Response status: ${response.status}`);
-  //     }
-  //     const data = await response.json();
-  //     if (data) this.productData = data.map(item => ( {id: item.id, name: item.nameStr} ));
-
-  //   } catch (e) {
-  //     console.log(e)
-  //   }
-  // }
-
   async fetchProductList(url) {
     try {
       const response = await asyncFetch("GET", window.sqlHost, url, window.token, window.username)
@@ -95,7 +68,7 @@ class SelectProduct extends LitElement {
         throw new Error(`Response status: ${response.status}`);
       }
       const data = await response.json();
-      if (data) this.productData = data.map(item => ( {id: item.id, name: item.nameStr} ));
+      if (data) this.productData = data.map(item => ({ id: item.id, name: item.nameStr }));
 
     } catch (e) {
       console.log(e)
@@ -123,7 +96,7 @@ class SelectProduct extends LitElement {
 
   willUpdate(changedProperties) {
     if (changedProperties.has("categoryId")) {
-      if (this.categoryName.length === 0 && this.categoryId && this.catRaw.length > 0 ) {
+      if (this.categoryName.length === 0 && this.categoryId && this.catRaw.length > 0) {
         const xx = this.catRaw.find((element) => element.id.toLowerCase() === this.categoryId.toLowerCase());
         this.categoryName = xx.catName;
       }
@@ -167,13 +140,8 @@ class SelectProduct extends LitElement {
       this.fetchType = 'category';
       this.categoryName = event.detail.catName;
 
-      // const response = await asyncFetch("GET", window.sqlHost, `/product-service/product/byCategoryID/${event.detail.id}`, window.token, window.username);
-      // if (!response.ok) {
-      //   throw new Error(`Response status: ${response.status}`);
-      // }
-      // const data = await response.json();
-      // if (data) this.productData = data.map(item => ( {id: item.id, name: item.nameStr} ));
       this.fetchProductList(`/product-service/product/byCategoryID/${event.detail.id}`);
+
       const xx = this.shadowRoot.querySelector(".w3-dropdown-content");
       xx.classList.add('hidden');
     } catch (error) {
@@ -183,9 +151,9 @@ class SelectProduct extends LitElement {
 
   productSelected(event) {
     // console.log(event.detail);
-    this.selectedProduct = {id: event.detail.id, name: event.detail.name};
-    console.log("selected product: ",this.selectedProduct);
-
+    this.selectedProduct = { id: event.detail.id, name: event.detail.name };
+    // console.log("selected product: ", this.selectedProduct);
+    this.dispatchEvent(new CustomEvent('product-select', { detail: this.selectedProduct }))
   }
 
   execQuery(event) {
@@ -213,7 +181,7 @@ class SelectProduct extends LitElement {
       <link href="https://www.w3schools.com/w3css/4/w3.css" rel="stylesheet" />
       <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
       <div class="w3-dropdown-hover">${this.selectedProduct?.id ? html`Sản phẩm <strong>thuộc nhóm ${this.categoryName}</strong>` : html`<span class="w3-text-red">Sản phẩm <strong>thuộc nhóm ${this.categoryName}</strong></span>`}
-        <div class="w3-dropdown-content w3-card-4" style="width:500px; height: 700px; overflow-y: auto;">
+        <div class="w3-dropdown-content w3-card-4" style="width:500px;  max-height: 80vh; overflow-y: auto;">
 
           <div class="w3-container">
             <lit-tree-view .rawData=${this.catRaw} @node-clicked=${this.treeViewClick}></lit-tree-view>

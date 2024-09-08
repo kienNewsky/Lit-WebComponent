@@ -10,15 +10,25 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <style>
-    body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", sans-serif}
-    .content {
-      margin-top: 44px; /* Adjust this value according to your navbar height */
+    body,
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      font-family: "Raleway", sans-serif
     }
+
+    .content {
+      margin-top: 44px;
+      /* Adjust this value according to your navbar height */
+    }
+
     .divider {
       border-top: 1px solid #bbb;
       padding: 1px 0;
     }
-
   </style>
   <title>newsky-table</title>
 </head>
@@ -47,14 +57,16 @@
           <a href="#" class="w3-bar-item w3-button">Bù trừ nhập xuất theo quy định</a>
         </div>
       </div>
-      <a href="javascript:void(0)" class="w3-bar-item w3-button w3-right w3-hide-large w3-hide-medium" onclick="w3_open()">
+      <a href="javascript:void(0)" class="w3-bar-item w3-button w3-right w3-hide-large w3-hide-medium"
+        onclick="w3_open()">
         <i class="fa fa-bars"></i>
       </a>
     </div>
   </div>
 
-<!-- Sidebar on small screens when clicking the menu icon -->
-  <nav class="w3-sidebar w3-bar-block w3-black w3-card w3-animate-left w3-hide-medium w3-hide-large" style="display:none" id="mySidebar">
+  <!-- Sidebar on small screens when clicking the menu icon -->
+  <nav class="w3-sidebar w3-bar-block w3-black w3-card w3-animate-left w3-hide-medium w3-hide-large"
+    style="display:none" id="mySidebar">
     <a href="javascript:void(0)" onclick="w3_close()" class="w3-bar-item w3-button w3-large w3-padding-16">Close ×</a>
     <a href="#about" onclick="w3_close()" class="w3-bar-item w3-button">ABOUT</a>
     <a href="#team" onclick="w3_close()" class="w3-bar-item w3-button">TEAM</a>
@@ -74,7 +86,8 @@
       <!-- <newsky-autocomplete id = "myauto" default-value="3"></newsky-autocomplete> -->
       <!-- <newsky-treeview id = "mytree"></newsky-treeview> -->
       <!-- default-value="c7373a6d-5dcb-4285-9a46-00726a70283e" -->
-      <newsky-select-product ></newsky-select-product>
+      <!-- <newsky-select-product></newsky-select-product> -->
+      <newsky-department></newsky-department>
     </div>
     <div class="w3-col m4">
       <!-- <lit-tree-view id="tree"></lit-tree-view> -->
@@ -85,37 +98,39 @@
   <!-- <script type="module" src="./src/js/component/newsky-autocomplete.js"></script> -->
   <!-- <script type="module" src="./src/newsky-treeview.js"></script> -->
   <!-- <script type="module" src="./src/js/component/newsky-treeview-2.js"></script> -->
-   <script type="module" src="./src/js/component/newsky-select-product.js"></script>
+  <!-- <script type="module" src="./src/js/component/newsky-select-product.js"></script> -->
+  <script type="module" src='./src/js/pages/department/department.js'></script>
 
   <script>
     // eslint-disable-next-line no-var
     var username = "tung";
     var sqlHost = "http://123.31.12.44:8080";
-    var token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0dW5nIiwiaWF0IjoxNzI1NDI0NjcxLCJleHAiOjE3MjU2MDQ2NzF9.cHC2MiCEDuznWZ10tjvkmW6W4bZ1V-lZnbZMGc88HJI";
+    var token =
+      "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0dW5nIiwiaWF0IjoxNzI1NjkyOTEzLCJleHAiOjE3MjU4NzI5MTN9.Ldj0yQB8SPnr0O8JhBOQtA0a-7-OMnbw6oE3gpfL_7k";
 
   </script>
   <script>
     const myTable = document.getElementById('myTable');
-        myTable.data = [
-          { name: 'John Doe', age: 28 },
-          { name: 'Jane Doe', age: 24 },
-          { name: 'Alice', age: 30 },
-          { name: 'Kien', age: 41 },
-          { name: 'Kien', age: 42 },
-          { name: 'Kien', age: 43 },
-          { name: 'Kien', age: 44 },
-          { name: 'Kien', age: 45 },
-          { name: 'Kien', age: 50 },
-          { name: 'Kien', age: 51 },
-          { name: 'Kien', age: 52 },
-          { name: 'Kien', age: 53 },
-          { name: 'Kien', age: 54 },
-          { name: 'Kien', age: 55 },
-          { name: 'Kien', age: 56 },
-          { name: 'Kien', age: 57 },
-          { name: 'Kien', age: 58 },
-          { name: 'Kien', age: 59 },
-        ];
+    myTable.data = [
+      { name: 'John Doe', age: 28 },
+      { name: 'Jane Doe', age: 24 },
+      { name: 'Alice', age: 30 },
+      { name: 'Kien', age: 41 },
+      { name: 'Kien', age: 42 },
+      { name: 'Kien', age: 43 },
+      { name: 'Kien', age: 44 },
+      { name: 'Kien', age: 45 },
+      { name: 'Kien', age: 50 },
+      { name: 'Kien', age: 51 },
+      { name: 'Kien', age: 52 },
+      { name: 'Kien', age: 53 },
+      { name: 'Kien', age: 54 },
+      { name: 'Kien', age: 55 },
+      { name: 'Kien', age: 56 },
+      { name: 'Kien', age: 57 },
+      { name: 'Kien', age: 58 },
+      { name: 'Kien', age: 59 },
+    ];
     myTable.addEventListener("row-click", (item) => { console.log(item.detail) });
 
   </script>
