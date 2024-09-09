@@ -2,15 +2,12 @@ import resolve from '@rollup/plugin-node-resolve';
 import { terser } from 'rollup-plugin-terser';
 
 export default {
-  input: 'src/newsky-table.js',
+  input: 'src/js/pages/department/department.js',
   output: {
-    file: 'dist/newsky-table.js',
+    file: 'dist/department.js',
     format: 'es',
   },
-  plugins: [
-    resolve(),
-    terser()
-  ]
+  plugins: [resolve(), terser()],
 };
 
 /**

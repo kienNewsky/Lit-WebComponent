@@ -3,6 +3,8 @@
 /* eslint-disable class-methods-use-this */
 /* eslint-disable no-nested-ternary */
 import { LitElement, html, css } from 'lit';
+import { choose } from 'lit/directives/choose.js';
+// import { choose } from '../../core/lit-all.min.js';
 
 class DeptDetail extends LitElement {
   static properties = {
@@ -55,7 +57,6 @@ class DeptDetail extends LitElement {
           class="w3-check"
           type="checkbox"
           .checked=${this.isActive}
-          }
           @click=${() => {
             this.isActive = !this.isActive;
           }}
@@ -125,14 +126,18 @@ class DeptDetail extends LitElement {
     // this.mode ='';
   }
 
+  showProduct() {}
+
   render() {
     return html`
       <link href="https://www.w3schools.com/w3css/4/w3.css" rel="stylesheet" />
-      ${this.mode
-        ? this.mode === 'edit'
-          ? html`${this.editDept()}`
-          : html`${this.newDept()}`
-        : ''}
+
+      ${choose(this.mode, [
+        ['', () => html`<div></div>`],
+        ['edit', () => this.editDept()],
+        ['add', () => this.newDept()],
+        ['showproduct', () => this.showProduct()],
+      ])}
     `;
   }
 }

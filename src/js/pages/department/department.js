@@ -16,8 +16,8 @@ class Department extends LitElement {
 
   render() {
     return html`
-            <dept-detail .mode=${this.mode} .deptId=${this.deptId}></dept-id>
-        `;
+      <dept-detail .mode=${this.mode} .deptId=${this.deptId}></dept-detail>
+    `;
   }
 }
 
