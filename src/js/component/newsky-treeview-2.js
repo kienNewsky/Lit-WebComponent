@@ -16,7 +16,7 @@ export class LitTreeView extends LitElement {
     }
 
     .tree-node.selected {
-      background-color: #2196F3;
+      background-color: #2196f3;
       color: white;
     }
 
@@ -69,7 +69,7 @@ export class LitTreeView extends LitElement {
     selectedNode: { type: Object },
     searchQuery: { type: String },
     rawData: { type: Array },
-    catName: { type: String, attribute: 'cat-name' }
+    catName: { type: String, attribute: 'cat-name' },
   };
 
   constructor() {
@@ -81,7 +81,7 @@ export class LitTreeView extends LitElement {
   }
 
   willUpdate(changedProperties) {
-    if (changedProperties.has("rawData")) {
+    if (changedProperties.has('rawData')) {
       this.treeData = this.buildTree(this.rawData);
     }
   }
@@ -115,15 +115,17 @@ export class LitTreeView extends LitElement {
     if (this.searchQuery.length > 0) {
       return node[this.catName].toLowerCase().includes(this.searchQuery);
     }
-    return false
+    return false;
   }
   // Drag and Drop
 
   dragStart(e, node) {
-    e.dataTransfer.setData('text/plain', JSON.stringify({ source: "treenode", data: node }));
+    e.dataTransfer.setData(
+      'text/plain',
+      JSON.stringify({ source: 'treenode', data: node }),
+    );
     this.draggedNode = node;
   }
-
 
   dragOver(e) {
     e.preventDefault();
@@ -152,19 +154,33 @@ export class LitTreeView extends LitElement {
       targetNode.children.push(draggedNodeData);
     }
 
-    this.dispatchEvent(new CustomEvent('node-drop', { detail: { sourcce: draggedSource, drag: draggedNodeData, target: targetNode } }))
+    this.dispatchEvent(
+      new CustomEvent('node-drop', {
+        detail: {
+          source: draggedSource,
+          drag: draggedNodeData,
+          target: targetNode,
+        },
+      }),
+    );
 
     this.requestUpdate();
   }
 
   removeNode() {
     if (this.selectedNode !== null) {
-      alert(`You are considering remove node: ${JSON.stringify(this.selectedNode)}`);
+      alert(
+        `You are considering remove node: ${JSON.stringify(this.selectedNode)}`,
+      );
     }
   }
 
   newNode() {
-    this.dispatchEvent(new CustomEvent('create-newnode', { detail: { currNode: this.selectedNode } }))
+    this.dispatchEvent(
+      new CustomEvent('create-newnode', {
+        detail: { currNode: this.selectedNode },
+      }),
+    );
   }
 
   removeNodeById(nodes, nodeId) {
@@ -215,10 +231,18 @@ export class LitTreeView extends LitElement {
     this.requestUpdate();
   }
 
-  selectNode(node) {
+  selectNode(node, event) {
     this.selectedNode = node;
     this.requestUpdate();
-    this.dispatchEvent(new CustomEvent('node-clicked', { detail: node }));
+    let keypress = 'none';
+    if (event.ctrlKey) {
+      keypress = 'ctrl';
+    }
+    this.dispatchEvent(
+      new CustomEvent('node-clicked', {
+        detail: { data: node, key: keypress },
+      }),
+    );
   }
 
   renderTree(nodes) {
@@ -226,16 +250,24 @@ export class LitTreeView extends LitElement {
       const isHighlighted = this.searchHighlight(node);
       return html`
         <div
-          class="tree-node ${this.selectedNode === node ? 'selected' : ''} ${isHighlighted ? 'highlight' : ''} draggable"
+          class="tree-node ${this.selectedNode === node
+            ? 'selected'
+            : ''} ${isHighlighted ? 'highlight' : ''} draggable"
           draggable="true"
           @dragstart=${e => this.dragStart(e, node)}
           @dragover=${this.dragOver}
           @drop=${e => this.drop(e, node)}
         >
           <span class="icon" @click=${() => this.toggleNode(node)}>
-            ${node.children && node.children.length ? (node.expanded ? '-' : '+') : ''}
+            ${node.children && node.children.length
+              ? node.expanded
+                ? '-'
+                : '+'
+              : ''}
           </span>
-          <span @click=${() => this.selectNode(node)}>${this.renderNodeContent(node)}</span>
+          <span @click=${event => this.selectNode(node, event)}
+            >${this.renderNodeContent(node)}</span
+          >
         </div>
         <div class="tree-children ${node.expanded ? 'expanded' : ''}">
           ${node.children ? this.renderTree(node.children) : ''}
@@ -246,29 +278,48 @@ export class LitTreeView extends LitElement {
 
   renderNodeContent(node) {
     if (this.searchQuery.length > 0) {
-      const matchIndex = node[this.catName].toLowerCase().indexOf(this.searchQuery);
+      const matchIndex = node[this.catName]
+        .toLowerCase()
+        .indexOf(this.searchQuery);
       if (matchIndex === -1) return node[this.catName];
 
       const beforeMatch = node[this.catName].slice(0, matchIndex);
-      const matchText = node[this.catName].slice(matchIndex, matchIndex + this.searchQuery.length);
-      const afterMatch = node[this.catName].slice(matchIndex + this.searchQuery.length);
+      const matchText = node[this.catName].slice(
+        matchIndex,
+        matchIndex + this.searchQuery.length,
+      );
+      const afterMatch = node[this.catName].slice(
+        matchIndex + this.searchQuery.length,
+      );
       // console.log(` ${beforeMatch}<span class="highlight-text">${matchText}</span>${afterMatch}`)
       return html`
-        ${beforeMatch}<span class="highlight-text">${matchText}</span>${afterMatch}
+        ${beforeMatch}<span class="highlight-text">${matchText}</span
+        >${afterMatch}
       `;
     }
-    return node[this.catName]
+    return node[this.catName];
   }
 
   render() {
     return html`
-    <link href="https://www.w3schools.com/w3css/4/w3.css" rel="stylesheet" />
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
+      <link href="https://www.w3schools.com/w3css/4/w3.css" rel="stylesheet" />
+      <link
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+        rel="stylesheet"
+      />
       <div class="w3-bar w3-light-grey w3-padding-small">
-        <button class = "w3-bar-item w3-button" @click=${this.expandAll}><i class="fa fa-solid fa-chevron-down"></i></button>
-        <button class="w3-bar-item w3-button" @click=${this.collapseAll}><i class="fa fa-solid fa-chevron-up"></i></button>
-        <button class="w3-bar-item w3-button" @click=${this.newNode}><i class="fa fa-solid fa-plus"></i></button>
-        <button class="w3-bar-item w3-button" @click=${this.removeNode}><i class="fa fa-solid fa-minus"></i></button>
+        <button class="w3-bar-item w3-button" @click=${this.expandAll}>
+          <i class="fa fa-solid fa-chevron-down"></i>
+        </button>
+        <button class="w3-bar-item w3-button" @click=${this.collapseAll}>
+          <i class="fa fa-solid fa-chevron-up"></i>
+        </button>
+        <button class="w3-bar-item w3-button" @click=${this.newNode}>
+          <i class="fa fa-solid fa-plus"></i>
+        </button>
+        <button class="w3-bar-item w3-button" @click=${this.removeNode}>
+          <i class="fa fa-solid fa-minus"></i>
+        </button>
         <input
           class="w3-bar-item w3-input w3-right"
           type="text"
@@ -276,9 +327,7 @@ export class LitTreeView extends LitElement {
           @input=${this.handleSearchInput}
         />
       </div>
-      <div>
-        ${this.renderTree(this.treeData)}
-      </div>
+      <div>${this.renderTree(this.treeData)}</div>
     `;
   }
 }
