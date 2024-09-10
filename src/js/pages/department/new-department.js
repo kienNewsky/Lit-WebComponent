@@ -1,3 +1,4 @@
+/* eslint-disable no-return-assign */
 import { LitElement, html } from 'lit';
 import { asyncFetch } from '../../core/hook.js';
 
@@ -87,7 +88,12 @@ export class NewDepartment extends LitElement {
       </div>
       <div class="w3-row" style="padding-top: 10px">
         <label>Tên phòng ban</label>
-        <input class="w3-input" type="text" />
+        <input
+          class="w3-input"
+          type="text"
+          .value=${this.deptName}
+          @input=${e => (this.deptName = e.target.value)}
+        />
       </div>
       <div class="w3-row" style="padding-top: 10px">
         <input

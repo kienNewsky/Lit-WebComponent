@@ -27,6 +27,7 @@ export class Department extends LitElement {
     // Load department data
     this.loadDataForTreeView();
     this.addEventListener('save-department', this.listenSaveEditItem);
+    this.addEventListener('addnew-department', this.listenAddItem);
     this.addEventListener('cancel-detail', this.listenCancelDetail);
     this.addEventListener('delete-department', this.listenDelItem);
   }
@@ -34,6 +35,7 @@ export class Department extends LitElement {
   disconnectedCallback() {
     super.disconnectedCallback();
     this.removeEventListener('save-department', this.listenSaveEditItem);
+    this.removeEventListener('addnew-department', this.listenAddItem);
     this.removeEventListener('cancel-detail', this.listenCancelDetail);
     this.removeEventListener('delete-department', this.listenDelItem);
   }
@@ -57,10 +59,14 @@ export class Department extends LitElement {
     }
   }
 
+  listenCancelDetail(event) {
+    this.mode = '';
+  }
+
   listenNodeClick(event) {
     this.deptId = event.detail.data.id;
     this.deptName = event.detail.data.catName;
-    this.mode = event.data.key === 'ctrl' ? 'edit' : 'showproduct';
+    this.mode = event.detail.key === 'ctrl' ? 'edit' : 'showproduct';
   }
 
   listenNodeDrop(event) {
@@ -89,6 +95,7 @@ export class Department extends LitElement {
 
   listenAddItem(event) {
     // Add new node to treeview end expand the parent node of new node
+    this.mode = '';
   }
 
   render() {

@@ -15,13 +15,6 @@ export class DeptDetail extends LitElement {
     deptId: { type: String, attribute: 'dept-id' },
   };
 
-  // constructor() {
-  //   super();
-  //   this.isActive = true;
-  //   this.deptName = 'temporary for test';
-  //   this.isRoot = false;
-  // }
-
   render() {
     return html`
       <link href="https://www.w3schools.com/w3css/4/w3.css" rel="stylesheet" />
