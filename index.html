@@ -3,164 +3,154 @@
 <!-- eslint-disable no-console -->
 <!doctype html>
 <html lang="en">
-
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-  <style>
-    body,
-    h1,
-    h2,
-    h3,
-    h4,
-    h5,
-    h6 {
-      font-family: "Raleway", sans-serif
-    }
-
-    .content {
-      margin-top: 44px;
-      /* Adjust this value according to your navbar height */
-    }
-
-    .divider {
-      border-top: 1px solid #bbb;
-      padding: 1px 0;
-    }
-  </style>
-  <title>newsky-table</title>
-</head>
-
-<body>
-
-  <!-- Navbar (sit on top) -->
-  <div class="w3-top">
-    <div class="w3-bar w3-white w3-card" id="myNavbar">
-      <a href="#home" class="w3-bar-item w3-button w3-wide">LOGO</a>
-
-      <div class="w3-dropdown-hover w3-hide-small">
-        <button class="w3-button" title="Notifications">Sản xuất <i class="fa fa-caret-down"></i></button>
-        <div class="w3-dropdown-content w3-card-4 w3-bar-block">
-          <a href="#" class="w3-bar-item w3-button">Các công đoạn</a>
-          <a href="#" class="w3-bar-item w3-button">Định mức</a>
-          <a href="#" class="w3-bar-item w3-button">Kiểm tra khả năng đáp ứng</a>
-          <div class="divider"></div>
-          <a href="#" class="w3-bar-item w3-button">Lên lịch sản xuất</a>
-          <a href="#" class="w3-bar-item w3-button">Xem lịch chạy máy</a>
-          <div class="divider"></div>
-          <a href="#" class="w3-bar-item w3-button">Nhập kết quả sản xuất</a>
-          <a href="#" class="w3-bar-item w3-button">Chốt vật tư cuối ngày</a>
-          <a href="#" class="w3-bar-item w3-button">Kiểm soát hao hụt vật tư</a>
-          <div class="divider"></div>
-          <a href="#" class="w3-bar-item w3-button">Bù trừ nhập xuất theo quy định</a>
-        </div>
-      </div>
-      <a href="javascript:void(0)" class="w3-bar-item w3-button w3-right w3-hide-large w3-hide-medium"
-        onclick="w3_open()">
-        <i class="fa fa-bars"></i>
-      </a>
-    </div>
-  </div>
-
-  <!-- Sidebar on small screens when clicking the menu icon -->
-  <nav class="w3-sidebar w3-bar-block w3-black w3-card w3-animate-left w3-hide-medium w3-hide-large"
-    style="display:none" id="mySidebar">
-    <a href="javascript:void(0)" onclick="w3_close()" class="w3-bar-item w3-button w3-large w3-padding-16">Close ×</a>
-    <a href="#about" onclick="w3_close()" class="w3-bar-item w3-button">ABOUT</a>
-    <a href="#team" onclick="w3_close()" class="w3-bar-item w3-button">TEAM</a>
-    <a href="#work" onclick="w3_close()" class="w3-bar-item w3-button">WORK</a>
-    <a href="#pricing" onclick="w3_close()" class="w3-bar-item w3-button">PRICING</a>
-    <a href="#contact" onclick="w3_close()" class="w3-bar-item w3-button">CONTACT</a>
-  </nav>
-
-
-  <div class="w3-container content">
-    <div class="w3-col m4">
-      <h1>My first Web Component</h1>
-      <newsky-table id="myTable" table-title="My First Component"></newsky-table>
-    </div>
-    <div class="w3-col m4">
-      <!-- <label for="myauto"><strong>Nhân viên phụ trách</strong></label> -->
-      <!-- <newsky-autocomplete id = "myauto" default-value="3"></newsky-autocomplete> -->
-      <!-- <newsky-treeview id = "mytree"></newsky-treeview> -->
-      <!-- default-value="c7373a6d-5dcb-4285-9a46-00726a70283e" -->
-      <newsky-select-product></newsky-select-product>
-      <!-- <newsky-department></newsky-department> -->
-    </div>
-    <div class="w3-col m4">
-      <!-- <lit-tree-view id="tree"></lit-tree-view> -->
-    </div>
-  </div>
-
-  <script type="module" src="./src/js/component/newsky-table.js"></script>
-  <!-- <script type="module" src="./src/js/component/newsky-autocomplete.js"></script> -->
-  <!-- <script type="module" src="./src/newsky-treeview.js"></script> -->
-  <!-- <script type="module" src="./src/js/component/newsky-treeview-2.js"></script> -->
-  <script type="module" src="./src/js/component/newsky-select-product.js"></script>
-  <!-- <script type="module" src='./src/js/pages/department/department.js'></script> -->
-
-  <script>
-    // eslint-disable-next-line no-var
-    var username = "tung";
-    var sqlHost = "http://123.31.12.44:8080";
-    var token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0dW5nIiwiaWF0IjoxNzI1ODk4MTgzLCJleHAiOjE3MjYwNzgxODN9.vZ-F4KhV6jPgcftOmfMmuxKI7foTNW_QPJGK9r5G8Gw";
-
-  </script>
-  <script>
-    const myTable = document.getElementById('myTable');
-    myTable.data = [
-      { name: 'John Doe', age: 28 },
-      { name: 'Jane Doe', age: 24 },
-      { name: 'Alice', age: 30 },
-      { name: 'Kien', age: 41 },
-      { name: 'Kien', age: 42 },
-      { name: 'Kien', age: 43 },
-      { name: 'Kien', age: 44 },
-      { name: 'Kien', age: 45 },
-      { name: 'Kien', age: 50 },
-      { name: 'Kien', age: 51 },
-      { name: 'Kien', age: 52 },
-      { name: 'Kien', age: 53 },
-      { name: 'Kien', age: 54 },
-      { name: 'Kien', age: 55 },
-      { name: 'Kien', age: 56 },
-      { name: 'Kien', age: 57 },
-      { name: 'Kien', age: 58 },
-      { name: 'Kien', age: 59 },
-    ];
-    myTable.addEventListener("row-click", (item) => { console.log(item.detail) });
-
-  </script>
-
-  <script>
-    // eslint-disable-next-line camelcase
-    function w3_open() {
-      const x = document.getElementById("mySidebar");
-      x.style.width = "300px";
-      x.style.paddingTop = "10%";
-      x.style.display = "block";
-    }
-
-    // Close side navigation
-    // eslint-disable-next-line camelcase
-    function w3_close() {
-      document.getElementById("mySidebar").style.display = "none";
-    }
-
-    // eslint-disable-next-line no-unused-vars
-    function openNav() {
-      const x = document.getElementById("navDemo");
-      if (x.className.indexOf("w3-show") === -1) {
-        x.className += " w3-show";
-      } else {
-        x.className = x.className.replace(" w3-show", "");
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Roboto"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <style>
+      body,
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6 {
+        font-family: 'Raleway', sans-serif;
       }
-    }
-  </script>
 
-</body>
+      .content {
+        margin-top: 44px;
+        /* Adjust this value according to your navbar height */
+      }
 
+      .divider {
+        border-top: 1px solid #bbb;
+        padding: 1px 0;
+      }
+    </style>
+    <title>newsky-table</title>
+  </head>
+
+  <body>
+    <!-- Navbar (sit on top) -->
+    <div class="w3-top">
+      <div class="w3-bar w3-white w3-card" id="myNavbar">
+        <a href="#home" class="w3-bar-item w3-button w3-wide">LOGO</a>
+
+        <div class="w3-dropdown-hover w3-hide-small">
+          <button class="w3-button" title="Notifications">
+            Sản xuất <i class="fa fa-caret-down"></i>
+          </button>
+          <div class="w3-dropdown-content w3-card-4 w3-bar-block">
+            <a href="#" class="w3-bar-item w3-button">Các công đoạn</a>
+            <a href="#" class="w3-bar-item w3-button">Định mức</a>
+            <a href="#" class="w3-bar-item w3-button"
+              >Kiểm tra khả năng đáp ứng</a
+            >
+            <div class="divider"></div>
+            <a href="#" class="w3-bar-item w3-button">Lên lịch sản xuất</a>
+            <a href="#" class="w3-bar-item w3-button">Xem lịch chạy máy</a>
+            <div class="divider"></div>
+            <a href="#" class="w3-bar-item w3-button">Nhập kết quả sản xuất</a>
+            <a href="#" class="w3-bar-item w3-button">Chốt vật tư cuối ngày</a>
+            <a href="#" class="w3-bar-item w3-button"
+              >Kiểm soát hao hụt vật tư</a
+            >
+            <div class="divider"></div>
+            <a href="#" class="w3-bar-item w3-button"
+              >Bù trừ nhập xuất theo quy định</a
+            >
+          </div>
+        </div>
+        <a
+          href="javascript:void(0)"
+          class="w3-bar-item w3-button w3-right w3-hide-large w3-hide-medium"
+          onclick="w3_open()"
+        >
+          <i class="fa fa-bars"></i>
+        </a>
+      </div>
+    </div>
+
+    <!-- Sidebar on small screens when clicking the menu icon -->
+    <nav
+      class="w3-sidebar w3-bar-block w3-black w3-card w3-animate-left w3-hide-medium w3-hide-large"
+      style="display: none"
+      id="mySidebar"
+    >
+      <a
+        href="javascript:void(0)"
+        onclick="w3_close()"
+        class="w3-bar-item w3-button w3-large w3-padding-16"
+        >Close ×</a
+      >
+      <a href="#about" onclick="w3_close()" class="w3-bar-item w3-button"
+        >ABOUT</a
+      >
+      <a href="#team" onclick="w3_close()" class="w3-bar-item w3-button"
+        >TEAM</a
+      >
+      <a href="#work" onclick="w3_close()" class="w3-bar-item w3-button"
+        >WORK</a
+      >
+      <a href="#pricing" onclick="w3_close()" class="w3-bar-item w3-button"
+        >PRICING</a
+      >
+      <a href="#contact" onclick="w3_close()" class="w3-bar-item w3-button"
+        >CONTACT</a
+      >
+    </nav>
+
+    <div class="w3-container content">
+      <newsky-department></newsky-department>
+    </div>
+
+    <script
+      type="module"
+      src="./src/js/pages/department/exec-department.js"
+    ></script>
+    <!-- <script type="module" src='./src/js/pages/department/department.js'></script> -->
+
+    <script>
+      // eslint-disable-next-line no-var
+      var username = 'tung';
+      var sqlHost = 'http://123.31.12.44:8080';
+      var token =
+        'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0dW5nIiwiaWF0IjoxNzI1ODk4MTgzLCJleHAiOjE3MjYwNzgxODN9.vZ-F4KhV6jPgcftOmfMmuxKI7foTNW_QPJGK9r5G8Gw';
+    </script>
+
+    <script>
+      // eslint-disable-next-line camelcase
+      function w3_open() {
+        const x = document.getElementById('mySidebar');
+        x.style.width = '300px';
+        x.style.paddingTop = '10%';
+        x.style.display = 'block';
+      }
+
+      // Close side navigation
+      // eslint-disable-next-line camelcase
+      function w3_close() {
+        document.getElementById('mySidebar').style.display = 'none';
+      }
+
+      // eslint-disable-next-line no-unused-vars
+      function openNav() {
+        const x = document.getElementById('navDemo');
+        if (x.className.indexOf('w3-show') === -1) {
+          x.className += ' w3-show';
+        } else {
+          x.className = x.className.replace(' w3-show', '');
+        }
+      }
+    </script>
+  </body>
 </html>

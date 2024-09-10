@@ -4,9 +4,12 @@
 /* eslint-disable wc/require-listener-teardown */
 /* eslint-disable class-methods-use-this */
 /* eslint-disable lit-a11y/click-events-have-key-events */
+/*
+customElements.define('newsky-autocomplete', AutocompleteComponent);
+*/
 import { LitElement, html, css } from 'lit';
 
-class AutocompleteComponent extends LitElement {
+export class AutocompleteComponent extends LitElement {
   static properties = {
     suggestions: { type: Array },
     filteredSuggestions: { type: Array },
@@ -284,5 +287,3 @@ class AutocompleteComponent extends LitElement {
     }
   `;
 }
-
-customElements.define('newsky-autocomplete', AutocompleteComponent);

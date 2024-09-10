@@ -1,12 +1,13 @@
 /* eslint-disable wc/require-listener-teardown */
 /* eslint-disable class-methods-use-this */
 /* eslint-disable lit-a11y/click-events-have-key-events */
+/**
+  window.customElements.define('newsky-select-product', SelectProduct);
+ */
 import { LitElement, html, css } from 'lit';
 import { asyncFetch } from '../core/hook.js';
-import './newsky-treeview-2.js';
-import './newsky-autocomplete.js';
 
-class SelectProduct extends LitElement {
+export class SelectProduct extends LitElement {
   static properties = {
     defaultValue: { type: String, attribute: 'default-value' },
     defaultProductUrl: { type: String },
@@ -229,10 +230,10 @@ class SelectProduct extends LitElement {
           style="width:500px;  max-height: 80vh; overflow-y: auto;"
         >
           <div class="w3-container">
-            <lit-tree-view
+            <newsky-treeview
               .rawData=${this.catRaw}
               @node-clicked=${this.treeViewClick}
-            ></lit-tree-view>
+            ></newsky-treeview>
           </div>
         </div>
       </div>
@@ -247,5 +248,3 @@ class SelectProduct extends LitElement {
     `;
   }
 }
-
-window.customElements.define('newsky-select-product', SelectProduct);

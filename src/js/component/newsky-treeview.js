@@ -4,6 +4,9 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable no-nested-ternary */
 /* eslint-disable lit-a11y/click-events-have-key-events */
+/**
+ customElements.define('newsky-treeview', LitTreeView);
+ */
 import { LitElement, html, css } from 'lit';
 
 export class LitTreeView extends LitElement {
@@ -331,5 +334,3 @@ export class LitTreeView extends LitElement {
     `;
   }
 }
-
-customElements.define('lit-tree-view', LitTreeView);
