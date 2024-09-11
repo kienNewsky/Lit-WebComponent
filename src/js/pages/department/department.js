@@ -12,6 +12,7 @@ export class Department extends LitElement {
     deptId: { type: String },
     deptName: { type: String },
     catRaw: { type: Array },
+    nodeIdShow: { type: String },
   };
 
   constructor() {
@@ -20,6 +21,7 @@ export class Department extends LitElement {
     this.deptId = '';
     this.deptName = '';
     this.catRaw = [];
+    this.nodeIdShow = '';
   }
 
   connectedCallback() {
@@ -59,6 +61,33 @@ export class Department extends LitElement {
     }
   }
 
+  async saveDepartment(data) {
+    try {
+      const response = await asyncFetch(
+        'PUT',
+        window.sqlHost,
+        `/employee-service/department/${data.id}`,
+        window.token,
+        window.username,
+        {
+          deptName: data.deptName,
+          isActive: data.isActive,
+          isChildOf: data.isChildOf,
+        },
+      );
+      if (!response.ok) {
+        throw new Error(`Response status: ${response.status}`);
+      }
+      const xdata = await response.json();
+      if (xdata) {
+        return true;
+      }
+    } catch (e) {
+      console.log(e);
+    }
+    return false;
+  }
+
   listenCancelDetail(event) {
     this.mode = '';
   }
@@ -71,8 +100,28 @@ export class Department extends LitElement {
 
   listenNodeDrop(event) {
     // detail: { source: draggedSource, drag: draggedNodeData, target: targetNode }
+    // console.log('dragg and drop: ', event.detail);
     if (event.detail.source === 'treenode') {
       // write code to change isChildOf of draggedNode to targetNode
+      const dragData = event.detail.drag;
+      const targetId = event.detail.target.id;
+      const saveData = {
+        id: dragData.id,
+        deptName: dragData.deptName,
+        isActive: dragData.isActive,
+        isChildOf: targetId,
+      };
+      const saveDept = this.saveDepartment(saveData);
+      // update isChildOf of this node in catRaw
+      if (saveDept) {
+        const catLength = this.catRaw.length;
+        for (let i; i < catLength; i += 1) {
+          if (this.catRaw[i].id === dragData.id)
+            this.catRaw[i].isChildOf = targetId;
+        }
+      } else {
+        alert('There is an error while saving department');
+      }
     }
     if (event.detail.source === 'employee') {
       // write code to move drag employee to targetNode. (Change deptId to id of targetNode)
@@ -87,6 +136,10 @@ export class Department extends LitElement {
 
   listenSaveEditItem(event) {
     // Edit node with updated data
+    const treeview = this.shadowRoot.querySelector('newsky-treeview');
+    if (treeview) {
+      treeview.updateNodeName(event.detail.id, event.detail.deptName);
+    }
   }
 
   listenDelItem(event) {
@@ -95,6 +148,9 @@ export class Department extends LitElement {
 
   listenAddItem(event) {
     // Add new node to treeview end expand the parent node of new node
+    // console.log('add item: ', event.detail);
+    this.catRaw = [...this.catRaw, event.detail];
+    this.nodeIdShow = event.detail.id;
     this.mode = '';
   }
 
@@ -106,6 +162,7 @@ export class Department extends LitElement {
           <newsky-treeview
             cat-name="deptName"
             .rawData=${this.catRaw}
+            .nodeIdShow=${this.nodeIdShow}
             @node-clicked=${this.listenNodeClick}
             @node-drop=${this.listenNodeDrop}
             @create-newnode=${this.listenNewNodeBttClick}

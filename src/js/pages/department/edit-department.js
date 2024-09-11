@@ -12,6 +12,7 @@ export class EditDepartment extends LitElement {
     deptName: { type: String },
     isActive: { type: Boolean },
     isChildOf: { type: String },
+    keyRender: { type: Number },
   };
 
   constructor() {
@@ -19,11 +20,20 @@ export class EditDepartment extends LitElement {
     this.deptName = '';
     this.isActive = true;
     this.isChildOf = '';
+    this.keyRender = 0;
   }
 
   connectedCallback() {
     super.connectedCallback();
-    this.loadDepartmentDetail();
+    if (this.keyRender === 0) {
+      this.loadDepartmentDetail();
+      this.keyRender = 1;
+    }
+  }
+
+  willUpdate(changedProperties) {
+    if (changedProperties.has('deptId') && this.keyRender > 0)
+      this.loadDepartmentDetail();
   }
 
   async loadDepartmentDetail() {
@@ -84,6 +94,7 @@ export class EditDepartment extends LitElement {
 
   async deleteDepartment(event) {
     event.preventDefault();
+    // Nhớ chèn dòng kiểm tra xem phòng ban này có được phép xóa không rồi mới xóa
     try {
       const response = await asyncFetch(
         'DELETE',

@@ -73,6 +73,7 @@ export class LitTreeView extends LitElement {
     searchQuery: { type: String },
     rawData: { type: Array },
     catName: { type: String, attribute: 'cat-name' },
+    nodeIdShow: { type: String },
   };
 
   constructor() {
@@ -81,12 +82,17 @@ export class LitTreeView extends LitElement {
     this.selectedNode = null;
     this.searchQuery = '';
     if (!this.catName) this.catName = 'catName';
+    this.nodeIdShow = '';
   }
 
   willUpdate(changedProperties) {
     if (changedProperties.has('rawData')) {
       this.treeData = this.buildTree(this.rawData);
+      if (this.nodeIdShow) this.showChildNode(this.nodeIdShow);
     }
+
+    if (changedProperties.has('nodeIdShow'))
+      this.showChildNode(this.nodeIdShow);
   }
 
   // Toolbar control
@@ -97,6 +103,67 @@ export class LitTreeView extends LitElement {
 
   collapseAll() {
     this.modifyExpandState(this.treeData, false);
+  }
+
+  showChildNode(nodeId) {
+    // const root = this.findRootNode(nodeId, this.treeData);
+    this.expandPathToNode(nodeId, this.treeData);
+    this.requestUpdate();
+  }
+
+  findRootNode(nodeId, nodes) {
+    let node = this.findNodeById(nodeId, nodes);
+    if (!node) return null;
+
+    // Traverse upwards until we find the root node
+    while (node.isChildOf !== null) {
+      node = this.findNodeById(node.isChildOf, nodes);
+    }
+
+    return node;
+  }
+
+  updateNodeName(nodeId, nodeName) {
+    const cnode = this.findNodeById(nodeId, this.treeData);
+    cnode[this.catName] = nodeName;
+    this.requestUpdate();
+  }
+
+  findNodeById(nodeId, nodes) {
+    // eslint-disable-next-line prefer-const
+    for (let node of nodes) {
+      if (node.id === nodeId) {
+        return node;
+      }
+      if (node.children && node.children.length) {
+        const childResult = this.findNodeById(nodeId, node.children);
+        if (childResult) return childResult;
+      }
+    }
+    return null;
+  }
+
+  // Recursive function to expand the path from root to the found node
+  expandPathToNode(nodeId, nodes) {
+    const node = this.findNodeById(nodeId, nodes);
+    if (!node) return;
+
+    // Traverse upwards, expanding all nodes in the path
+    this.expandNodeAndAncestors(node, nodes);
+  }
+
+  // Expand node and its ancestors
+  expandNodeAndAncestors(node, nodes) {
+    node.expanded = true; // Mark the current node as expanded
+
+    // If it has a parent, expand the parent as well
+    if (node.isChildOf !== null) {
+      const parentNode = this.findNodeById(node.isChildOf, nodes);
+      if (parentNode) {
+        parentNode.expanded = true;
+        this.expandNodeAndAncestors(parentNode, nodes); // Recursively expand ancestors
+      }
+    }
   }
 
   modifyExpandState(nodes, state) {

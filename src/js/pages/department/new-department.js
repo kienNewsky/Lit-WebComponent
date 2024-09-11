@@ -12,7 +12,7 @@ export class NewDepartment extends LitElement {
     deptName: { type: String },
     isActive: { type: Boolean },
     isChildOf: { type: String },
-    isRoot: { type: String },
+    isRoot: { type: Boolean },
   };
 
   constructor() {
@@ -20,7 +20,7 @@ export class NewDepartment extends LitElement {
     this.deptName = '';
     this.isActive = true;
     this.isChildOf = '';
-    this.isRoot = true;
+    this.isRoot = false;
   }
 
   connectedCallback() {
@@ -40,19 +40,20 @@ export class NewDepartment extends LitElement {
         {
           deptName: this.deptName,
           isActive: this.isActive,
-          isChildOf: this.isChildOf,
+          isChildOf: this.isRoot ? null : this.isChildOf,
         },
       );
       if (!response.ok) {
         throw new Error(`Response status: ${response.status}`);
       }
       const data = await response.json();
+
       if (data) {
         this.dispatchEvent(
           new CustomEvent('addnew-department', {
             bubbles: true,
             composed: true,
-            detail: { ...data, parentId: this.parentId },
+            detail: data, // { ...data, parentId: this.parentId },
           }),
         );
       }
