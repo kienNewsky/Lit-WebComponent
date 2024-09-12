@@ -35,6 +35,10 @@ export class DeptDetail extends LitElement {
           'showproduct',
           () => html`<list-employee .deptId=${this.deptId}></list-employee>`,
         ],
+        [
+          'new-employee',
+          () => html`<new-employee .deptId=${this.deptId}></new-employee>`,
+        ],
       ])}
     `;
   }

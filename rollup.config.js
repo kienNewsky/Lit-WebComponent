@@ -2,9 +2,9 @@ import resolve from '@rollup/plugin-node-resolve';
 import { terser } from 'rollup-plugin-terser';
 
 export default {
-  input: 'src/js/pages/department/department.js',
+  input: 'src/js/pages/department/exec-department.js',
   output: {
-    file: 'dist/department.js',
+    file: 'dist/exec-department.js',
     format: 'es',
   },
   plugins: [resolve(), terser()],
