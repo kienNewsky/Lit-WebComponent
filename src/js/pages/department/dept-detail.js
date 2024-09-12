@@ -13,6 +13,7 @@ export class DeptDetail extends LitElement {
   static properties = {
     mode: { type: String, attribute: 'mode' },
     deptId: { type: String, attribute: 'dept-id' },
+    deptName: { type: String },
   };
 
   render() {
@@ -33,11 +34,19 @@ export class DeptDetail extends LitElement {
         ],
         [
           'showproduct',
-          () => html`<list-employee .deptId=${this.deptId}></list-employee>`,
+          () =>
+            html`<list-employee
+              .deptId=${this.deptId}
+              .deptName=${this.deptName}
+            ></list-employee>`,
         ],
         [
           'new-employee',
-          () => html`<new-employee .deptId=${this.deptId}></new-employee>`,
+          () =>
+            html`<new-employee
+              .deptId=${this.deptId}
+              .deptName=${this.deptName}
+            ></new-employee>`,
         ],
       ])}
     `;

@@ -32,6 +32,8 @@ export class Department extends LitElement {
     this.addEventListener('addnew-department', this.listenAddItem);
     this.addEventListener('cancel-detail', this.listenCancelDetail);
     this.addEventListener('delete-department', this.listenDelItem);
+    this.addEventListener('new-employee', this.listenNewEmployee);
+    this.addEventListener('addnew-employee', this.listenAddNewEmployee);
   }
 
   disconnectedCallback() {
@@ -40,6 +42,8 @@ export class Department extends LitElement {
     this.removeEventListener('addnew-department', this.listenAddItem);
     this.removeEventListener('cancel-detail', this.listenCancelDetail);
     this.removeEventListener('delete-department', this.listenDelItem);
+    this.removeEventListener('new-employee', this.listenNewEmployee);
+    this.removeEventListener('addnew-employee', this.listenAddNewEmployee);
   }
 
   async loadDataForTreeView() {
@@ -93,8 +97,10 @@ export class Department extends LitElement {
   }
 
   listenNodeClick(event) {
+    // console.log(event.detail);
+
     this.deptId = event.detail.data.id;
-    this.deptName = event.detail.data.catName;
+    this.deptName = event.detail.data.deptName;
     this.mode = event.detail.key === 'ctrl' ? 'edit' : 'showproduct';
   }
 
@@ -152,6 +158,14 @@ export class Department extends LitElement {
     this.catRaw = [...this.catRaw, event.detail];
     this.nodeIdShow = event.detail.id;
     this.mode = '';
+  }
+
+  listenNewEmployee(event) {
+    this.mode = 'new-employee';
+  }
+
+  listenAddNewEmployee(event) {
+    this.mode = 'showproduct';
   }
 
   render() {
