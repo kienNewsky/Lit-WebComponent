@@ -80,8 +80,14 @@ export class ListEmployee extends LitElement {
   }
 
   employeeClick(emp) {
-    // eslint-disable-next-line no-alert
-    alert(`Click on ${emp.lastName} ${emp.firstName}`);
+    // event.preventDefault();
+    this.dispatchEvent(
+      new CustomEvent('edit-employee', {
+        bubbles: true,
+        composed: true,
+        detail: emp,
+      }),
+    );
   }
 
   handleRadioChange(e) {
@@ -109,7 +115,7 @@ export class ListEmployee extends LitElement {
           </button>
         </div>
 
-        <div class="w3-col m3">
+        <div class="w3-col m3" style="padding-left: 10px">
           <input
             class="w3-radio"
             type="radio"
@@ -118,10 +124,10 @@ export class ListEmployee extends LitElement {
             ?checked=${this.selectedValue === 'ahead'}
             @change=${this.handleRadioChange}
           />
-          <label>Đang ở bộ phận này</label>
+          <label>Đang làm</label>
         </div>
 
-        <div class="w3-col m3">
+        <div class="w3-col m3" style="padding-left: 10px">
           <input
             class="w3-radio"
             type="radio"
@@ -133,7 +139,7 @@ export class ListEmployee extends LitElement {
           <label>Đã chuyển</label>
         </div>
 
-        <div class="w3-col m3">
+        <div class="w3-col m3" style="padding-left: 10px">
           <input
             class="w3-radio"
             type="radio"

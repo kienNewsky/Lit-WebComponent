@@ -14,6 +14,7 @@ export class DeptDetail extends LitElement {
     mode: { type: String, attribute: 'mode' },
     deptId: { type: String, attribute: 'dept-id' },
     deptName: { type: String },
+    empId: { type: String },
   };
 
   render() {
@@ -47,6 +48,10 @@ export class DeptDetail extends LitElement {
               .deptId=${this.deptId}
               .deptName=${this.deptName}
             ></new-employee>`,
+        ],
+        [
+          'edit-employee',
+          () => html`<edit-employee .empId=${this.empId}></edit-employee>`,
         ],
       ])}
     `;

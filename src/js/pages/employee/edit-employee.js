@@ -2,8 +2,9 @@
 import { LitElement, html } from 'lit';
 import { asyncFetch, isValidDateStrict } from '../../core/hook.js';
 
-export class NewEmployee extends LitElement {
+export class EditEmployee extends LitElement {
   static properties = {
+    empId: { type: String },
     deptId: { type: String },
     lastName: { type: String },
     firstName: { type: String },
@@ -16,6 +17,7 @@ export class NewEmployee extends LitElement {
     email: { type: String },
     IsUser: { type: Boolean },
     jobDescription: { type: String },
+    keyRender: { type: Number },
   };
 
   constructor() {
@@ -31,15 +33,61 @@ export class NewEmployee extends LitElement {
     this.email = '';
     this.IsUser = false;
     this.jobDescription = '';
+
+    this.keyRender = 0;
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+    this.loadCurrEmployee();
+    this.keyRender += 1;
+  }
+
+  willUpdate(changedProperties) {
+    if (changedProperties.has('empId') && this.keyRender > 0)
+      this.loadCurrEmployee();
+  }
+
+  async loadCurrEmployee() {
+    try {
+      const response = await asyncFetch(
+        'GET',
+        window.sqlHost,
+        `/employee-service/employee/${this.empId}`,
+        window.token,
+        window.username,
+      );
+      if (!response.ok) {
+        throw new Error(`Response status: ${response.status}`);
+      }
+      const data = await response.json();
+
+      if (data) {
+        // this.saveEmployeeRelation(data.id);
+        this.lastName = data.lastName;
+        this.firstName = data.firstName;
+        this.jobTitle = data.title;
+        this.sex = data.sex;
+        this.birthDate = data.birthDate;
+        // this.startDate = '';
+        this.address = data.address;
+        this.handPhone = data.handPhone;
+        this.email = data.email;
+        this.IsUser = data.isUser;
+        this.jobDescription = data.jobDescription;
+      }
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   async saveEmployee(event) {
     event.preventDefault();
     try {
       const response = await asyncFetch(
-        'POST',
+        'PUT',
         window.sqlHost,
-        `/employee-service/employee`,
+        `/employee-service/employee/${this.empId}`,
         window.token,
         window.username,
         {
@@ -61,9 +109,9 @@ export class NewEmployee extends LitElement {
       const data = await response.json();
 
       if (data) {
-        this.saveEmployeeRelation(data.id);
+        // this.saveEmployeeRelation(data.id);
         this.dispatchEvent(
-          new CustomEvent('addnew-employee', {
+          new CustomEvent('save-edit-employee', {
             bubbles: true,
             composed: true,
             detail: data, // { ...data, parentId: this.parentId },
@@ -212,15 +260,6 @@ export class NewEmployee extends LitElement {
             class="w3-input"
             .value=${this.email}
             @input=${e => (this.email = e.target.value)}
-          />
-        </div>
-        <div class="w3-col m4" style="padding-left: 10px">
-          <label>Ngày bắt đầu làm việc</label>
-          <input
-            type="date"
-            class="w3-input"
-            .value=${this.startDate}
-            @input=${e => (this.startDate = e.target.value)}
           />
         </div>
       </div>

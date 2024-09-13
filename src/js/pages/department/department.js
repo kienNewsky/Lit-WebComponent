@@ -13,6 +13,7 @@ export class Department extends LitElement {
     deptName: { type: String },
     catRaw: { type: Array },
     nodeIdShow: { type: String },
+    empId: { type: String },
   };
 
   constructor() {
@@ -22,6 +23,7 @@ export class Department extends LitElement {
     this.deptName = '';
     this.catRaw = [];
     this.nodeIdShow = '';
+    this.empId = '';
   }
 
   connectedCallback() {
@@ -34,6 +36,8 @@ export class Department extends LitElement {
     this.addEventListener('delete-department', this.listenDelItem);
     this.addEventListener('new-employee', this.listenNewEmployee);
     this.addEventListener('addnew-employee', this.listenAddNewEmployee);
+    this.addEventListener('edit-employee', this.listenEditEmployee);
+    this.addEventListener('save-edit-employee', this.listenSaveEditEmployee);
   }
 
   disconnectedCallback() {
@@ -44,6 +48,8 @@ export class Department extends LitElement {
     this.removeEventListener('delete-department', this.listenDelItem);
     this.removeEventListener('new-employee', this.listenNewEmployee);
     this.removeEventListener('addnew-employee', this.listenAddNewEmployee);
+    this.removeEventListener('edit-employee', this.listenEditEmployee);
+    this.removeEventListener('save-edit-employee', this.listenSaveEditEmployee);
   }
 
   async loadDataForTreeView() {
@@ -93,7 +99,11 @@ export class Department extends LitElement {
   }
 
   listenCancelDetail(event) {
-    this.mode = '';
+    if (event.detail.back) {
+      this.mode = event.detail.back;
+    } else {
+      this.mode = '';
+    }
   }
 
   listenNodeClick(event) {
@@ -168,6 +178,17 @@ export class Department extends LitElement {
     this.mode = 'showproduct';
   }
 
+  listenEditEmployee(event) {
+    // console.log(event);
+
+    this.empId = event.detail.Id;
+    this.mode = 'edit-employee';
+  }
+
+  listenSaveEditEmployee(event) {
+    this.mode = 'showproduct';
+  }
+
   render() {
     return html`
       <link href="https://www.w3schools.com/w3css/4/w3.css" rel="stylesheet" />
@@ -187,6 +208,7 @@ export class Department extends LitElement {
             .mode=${this.mode}
             .deptId=${this.deptId}
             .deptName=${this.deptName}
+            .empId=${this.empId}
           ></dept-detail>
         </div>
       </div>
