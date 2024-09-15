@@ -99,7 +99,10 @@ export class ListEmployee extends LitElement {
   render() {
     return html`
       <link href="https://www.w3schools.com/w3css/4/w3.css" rel="stylesheet" />
-
+      <link
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+        rel="stylesheet"
+      />
       <div class="w3-row">
         <span class="w3-large w3-text-indigo"
           >Các nhân viên thuộc bộ phận: ${this.deptName}</span
@@ -170,7 +173,11 @@ export class ListEmployee extends LitElement {
                     ? ''
                     : 'w3-text-red'}"
                 >
-                  <td>${idx + 1}</td>
+                  <td>
+                    <a href="/department/employee/${emp.Id}" target="_blank"
+                      >${idx + 1} <i class="fa fa-solid fa-folder-open"></i
+                    ></a>
+                  </td>
                   <td>
                     <a href="#" @click=${() => this.employeeClick(emp)}
                       >${emp.lastName} ${emp.firstName}</a

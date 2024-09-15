@@ -397,7 +397,9 @@ export class LitTreeView extends LitElement {
           @input=${this.handleSearchInput}
         />
       </div>
-      <div>${this.renderTree(this.treeData)}</div>
+      <div style=" max-height: 80vh; overflow-y: auto;">
+        ${this.renderTree(this.treeData)}
+      </div>
     `;
   }
 }
