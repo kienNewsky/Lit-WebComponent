@@ -1,7 +1,8 @@
+/* eslint-disable class-methods-use-this */
 /* eslint-disable no-param-reassign */
 import { LitElement, html } from 'lit';
 
-class NewskyTable extends LitElement {
+export class NewskyTable extends LitElement {
   static properties = {
     data: { type: Array },
     filteredData: { type: Array },
@@ -9,10 +10,12 @@ class NewskyTable extends LitElement {
     pageSize: { type: Number },
     sortOrder: { type: String },
     sortColumn: { type: String },
-    tableTitle: { type: String, attribute: "table-title" },
+    tableTitle: { type: String, attribute: 'table-title' },
     // renderHeader: { type: Function }, // Add renderHeader as a property
-    headerTemplate: { type: Object},
-    headerAttr: {type: String, attribute: "header-attr"}
+    headerTemplate: { type: Object },
+    headerAttr: { type: String, attribute: 'header-attr' },
+    columns: { type: Array },
+    buildRow: { type: Function },
   };
 
   constructor() {
@@ -33,33 +36,39 @@ class NewskyTable extends LitElement {
       this.filteredData = [...this.data]; // Copy data into filteredData
     }
 
-    if (changedProperties.has("currentPage") || changedProperties.has("pageSize") || changedProperties.has("filteredData")) {
+    if (
+      changedProperties.has('currentPage') ||
+      changedProperties.has('pageSize') ||
+      changedProperties.has('filteredData')
+    ) {
       this.start = this.currentPage * this.pageSize;
       this.end = this.start + this.pageSize;
       this.pageData = this.filteredData.slice(this.start, this.end);
     }
-
   }
 
   render() {
-
     return html`
-      <link href='https://www.w3schools.com/w3css/4/w3.css' rel='stylesheet'>
+      <link href="https://www.w3schools.com/w3css/4/w3.css" rel="stylesheet" />
       <div>
         <div class="w3-cell-row">
           <div class="w3-cell">
             <span class="w3-xlarge">${this.tableTitle}</span>
           </div>
           <div class="w3-cell">
-            <input class="w3-input" type="text" placeholder="Search..." @input="${this.filterData}">
+            <input
+              class="w3-input"
+              type="text"
+              placeholder="Search..."
+              @input="${this.filterData}"
+            />
           </div>
         </div>
 
-        <table class="w3-table w3-hoverable">
+        <table class="w3-table w3-bordered w3-hoverable">
           <thead>
             <tr>
-
-            ${this.renderHeader()}
+              ${this.renderHeader()}
             </tr>
           </thead>
           <tbody>
@@ -67,41 +76,70 @@ class NewskyTable extends LitElement {
           </tbody>
         </table>
         <div class="w3-bar">
-          <button class="w3-button w3-bar-item w3-right" @click="${() => this.changePage(1)}" ?disabled="${this.end >= this.filteredData.length}">Next</button>
-          <span class="w3-bar-item w3-right">Page ${this.currentPage + 1} of ${Math.ceil(this.filteredData.length / this.pageSize)}</span>
-          <button class="w3-button w3-bar-item w3-right" @click="${() => this.changePage(-1)}" ?disabled="${this.currentPage === 0}">Previous</button>
+          <button
+            class="w3-button w3-bar-item w3-right"
+            @click="${() => this.changePage(1)}"
+            ?disabled="${this.end >= this.filteredData.length}"
+          >
+            Next
+          </button>
+          <span class="w3-bar-item w3-right"
+            >Page ${this.currentPage + 1} of
+            ${Math.ceil(this.filteredData.length / this.pageSize)}</span
+          >
+          <button
+            class="w3-button w3-bar-item w3-right"
+            @click="${() => this.changePage(-1)}"
+            ?disabled="${this.currentPage === 0}"
+          >
+            Previous
+          </button>
         </div>
       </div>
     `;
   }
 
- renderHeader() {
-    return Object.keys(this.data[0] || {}).map(column => html`<th @click="${() => this.sortTable(column)}">${column}</th>`)
+  renderHeader() {
+    if (this.columns) {
+      return this.columns.map(column =>
+        column.sort
+          ? html`
+              <th @click="${() => this.sortTable(column.field)}">
+                ${column.header}
+              </th>
+            `
+          : html` <th>${column.header}</th> `,
+      );
+    }
+    return Object.keys(this.data[0] || {}).map(
+      column =>
+        html`<th @click="${() => this.sortTable(column)}">${column}</th>`,
+    );
   }
 
   renderRow() {
-    return this.pageData.map(item => html`
-      <tr @click="${() => this.rowClicked(item)}">
-        ${Object.values(item).map(value => html`
-          <td class="w3-border">${value}</td>
-        `)}
-      </tr>
-    `);
+    return this.pageData.map(
+      (item, idx) => html`
+        <tr>
+          ${this.buildRow(item, idx)}
+        </tr>
+      `,
+    );
   }
 
   filterData(event) {
     const xquery = event.target.value.toLowerCase();
-    if (xquery.endsWith("++")) {
-      const query = xquery.slice(0, -2)
+    if (xquery.length > 1) {
+      // const query = xquery.slice(0, -2);
       this.filteredData = this.data.filter(item =>
         Object.values(item).some(value =>
-          value.toString().toLowerCase().includes(query)
-        )
+          value ? value.toString().toLowerCase().includes(xquery) : false,
+        ),
       );
-      event.target.value = query
+      event.target.value = xquery;
       this.currentPage = 0;
     } else if (xquery.length === 0) {
-      this.filteredData = [...this.data]
+      this.filteredData = [...this.data];
     }
   }
 
@@ -111,7 +149,6 @@ class NewskyTable extends LitElement {
   }
 
   sortTable(column) {
-
     this.sortOrder = this.sortOrder === 'asc' ? 'desc' : 'asc';
     this.sortColumn = column;
     const xx = this.filteredData.sort((a, b) => {
@@ -119,7 +156,7 @@ class NewskyTable extends LitElement {
       if (a[column] > b[column]) return this.sortOrder === 'asc' ? 1 : -1;
       return 0;
     });
-    this.filteredData = [... xx]
+    this.filteredData = [...xx];
     // this.requestUpdate();
   }
 
@@ -131,4 +168,4 @@ class NewskyTable extends LitElement {
   }
 }
 
-customElements.define('newsky-table', NewskyTable);
+// customElements.define('newsky-table', NewskyTable);
