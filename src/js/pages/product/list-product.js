@@ -28,7 +28,7 @@ export class ListProduct extends LitElement {
 
   connectedCallback() {
     super.connectedCallback();
-    this.urlData = `/product-service/product/byCategoryID/${this.catId}`;
+    this.urlData = `/product-service/product/sql/select/cat-id/${this.catId}`;
     this.loadProduct();
     this.keyConnected = true;
   }
@@ -40,7 +40,7 @@ export class ListProduct extends LitElement {
 
   willUpdate(changedProperties) {
     if (changedProperties.has('catId')) {
-      this.urlData = `/product-service/product/byCategoryID/${this.catId}`;
+      this.urlData = `/product-service/product/sql/select/cat-id/${this.catId}`;
       this.loadProduct();
     }
   }
@@ -58,10 +58,13 @@ export class ListProduct extends LitElement {
       if (!response.ok) {
         throw new Error(`Response status: ${response.status}`);
       }
-      const data = await response.json();
+      const data = await response.text();
 
       if (data) {
-        this.rawData = [...data];
+        this.rawData = [...JSON.parse(data)];
+        this.loading = false;
+      } else {
+        this.rawData = [];
         this.loading = false;
       }
     } catch (e) {
@@ -70,7 +73,14 @@ export class ListProduct extends LitElement {
   }
 
   colClicked(event) {
-    console.log(event);
+    // console.log('click on column ò lít product ', event);
+    this.dispatchEvent(
+      new CustomEvent('edit-product', {
+        bubbles: true,
+        composed: true,
+        detail: event,
+      }),
+    );
   }
 
   render() {
@@ -79,7 +89,7 @@ export class ListProduct extends LitElement {
       : html`
           <newsky-table
             id="myTable"
-            table-title="My First Component"
+            table-title=${this.catName}
             .data=${this.rawData}
             .columns=${this.columns}
             .buildRow=${(rowData, index) =>
@@ -87,7 +97,7 @@ export class ListProduct extends LitElement {
                 <td @click="${() => this.colClicked(rowData)}">
                   ${rowData.nameStr}
                 </td>
-                <td>${rowData.id}</td>`}
+                <td>${rowData.MeasName}</td>`}
           ></newsky-table>
         `;
   }
