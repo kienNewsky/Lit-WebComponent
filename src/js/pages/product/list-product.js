@@ -83,10 +83,26 @@ export class ListProduct extends LitElement {
     );
   }
 
+  newProduct(event) {
+    event.preventDefault();
+    this.dispatchEvent(
+      new CustomEvent('new-product', {
+        bubbles: true,
+        composed: true,
+        detail: { catId: this.catId, catName: this.catName },
+      }),
+    );
+  }
+
   render() {
     return this.loading
       ? html`<p>Loading</p>`
       : html`
+          <link
+            href="https://www.w3schools.com/w3css/4/w3.css"
+            rel="stylesheet"
+          />
+
           <newsky-table
             id="myTable"
             table-title=${this.catName}
@@ -99,6 +115,16 @@ export class ListProduct extends LitElement {
                 </td>
                 <td>${rowData.MeasName}</td>`}
           ></newsky-table>
+          <div class="w3-row" style="padding-top: 10px">
+            <div class="w3-col m3">
+              <button
+                class="w3-button w3-teal w3-round-xlarge"
+                @click=${this.newProduct}
+              >
+                Thêm sản phẩm
+              </button>
+            </div>
+          </div>
         `;
   }
 }

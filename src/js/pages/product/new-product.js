@@ -125,7 +125,7 @@ export class NewProduct extends LitElement {
         <span class="w3-xxlarge w3-text-indigo">Thêm một sản phẩm</span>
       </div>
       <div class="w3-row" style="padding-top: 10px">
-        <div class="w3-col m3">
+        <div class="w3-col m8">
           <label>Tên sản phẩm</label>
           <input
             type="text"
@@ -134,7 +134,7 @@ export class NewProduct extends LitElement {
             @input=${e => (this.nameStr = e.target.value)}
           />
         </div>
-        <div class="w3-col m3" style="padding-left: 10px">
+        <div class="w3-col m4" style="padding-left: 10px">
           <label>Tên</label>
           <input
             type="text"
