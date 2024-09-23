@@ -1,5 +1,7 @@
+/* eslint-disable no-nested-ternary */
 /* eslint-disable no-return-assign */
 import { LitElement, html } from 'lit';
+import { measCat } from '../core/hook.js';
 
 export class NewskySelectMeasCat extends LitElement {
   static properties = {
@@ -26,11 +28,15 @@ export class NewskySelectMeasCat extends LitElement {
     return html`
       <link href="https://www.w3schools.com/w3css/4/w3.css" rel="stylesheet" />
       <select class="w3-select" .value=${this.catId} @change=${this.catChange}>
-        <option value="1" selected>Diện tích</option>
-        <option value="2">Chiều dài</option>
-        <option value="3">Khối lượng</option>
-        <option value="4">Đơn lẻ</option>
-        <option value="5">Thể tích</option>
+        ${measCat.map(
+          item =>
+            html`<option
+              value="${item.value}"
+              ?selected=${this.catId === item.value.toString()}
+            >
+              ${item.name}
+            </option>`,
+        )}
       </select>
     `;
   }

@@ -135,33 +135,7 @@ export class NewProduct extends LitElement {
           />
         </div>
         <div class="w3-col m4" style="padding-left: 10px">
-          <label>Tên</label>
-          <input
-            type="text"
-            class="w3-input"
-            .value=${this.firstName}
-            @input=${e => (this.firstName = e.target.value)}
-          />
-        </div>
-        <div class="w3-col m3" style="padding-left: 10px">
-          <label>Ngày sinh</label>
-          <input
-            type="date"
-            class="w3-input"
-            .value=${this.birthDate}
-            @input=${e => (this.birthDate = e.target.value)}
-          />
-        </div>
-        <div class="w3-col m3" style="padding-left: 10px">
-          <label>Giới tính</label>
-          <select
-            class="w3-select"
-            .value=${this.sex}
-            @change=${e => (this.sex = e.target.value)}
-          >
-            <option value="male">Nam</option>
-            <option value="female">Nữ</option>
-          </select>
+          <newsky-select-meas></newsky-select-meas>
         </div>
       </div>
       <div class="w3-row" style="padding-top: 10px">
