@@ -1,6 +1,7 @@
+/* eslint-disable class-methods-use-this */
 /* eslint-disable no-return-assign */
 import { LitElement, html } from 'lit';
-import { asyncFetch, isValidDateStrict } from '../../core/hook.js';
+import { asyncFetch } from '../../core/hook.js';
 
 export class NewProduct extends LitElement {
   static properties = {
@@ -16,6 +17,7 @@ export class NewProduct extends LitElement {
     classPriceID: { type: String },
     segmentID: { type: String },
     comment: { type: String },
+    catName: { type: String },
   };
 
   constructor() {
@@ -118,11 +120,21 @@ export class NewProduct extends LitElement {
     );
   }
 
+  measSelected(event) {
+    console.log('meas selected', event);
+  }
+
+  segmentSelected(event) {
+    console.log('segment selected', event);
+  }
+
   render() {
     return html`
       <link href="https://www.w3schools.com/w3css/4/w3.css" rel="stylesheet" />
       <div class="w3-row">
-        <span class="w3-xxlarge w3-text-indigo">Thêm một sản phẩm</span>
+        <span class="w3-xlarge w3-text-indigo"
+          >Thêm một sản phẩm ${this.catName}</span
+        >
       </div>
       <div class="w3-row" style="padding-top: 10px">
         <div class="w3-col m8">
@@ -135,36 +147,36 @@ export class NewProduct extends LitElement {
           />
         </div>
         <div class="w3-col m4" style="padding-left: 10px">
-          <newsky-select-meas></newsky-select-meas>
+          <newsky-select-meas
+            @meas-select=${this.measSelected}
+          ></newsky-select-meas>
         </div>
       </div>
       <div class="w3-row" style="padding-top: 10px">
-        <div class="w3-col m6">
-          <label>Địa chỉ </label>
-          <input
-            type="text"
-            class="w3-input"
-            .value=${this.address}
-            @input=${e => (this.address = e.target.value)}
-          />
+        <div class="w3-col m4">
+          <newsky-select-segment
+            @segment-select=${this.segmentSelected}
+          ></newsky-select-segment>
         </div>
         <div class="w3-col m3" style="padding-left: 10px">
-          <label>Số điện thoại</label>
+          <label>Số tồn kho tối thiểu</label>
           <input
             type="text"
             class="w3-input"
-            .value=${this.handPhone}
-            @input=${e => (this.handPhone = e.target.value)}
+            .value=${this.minimumStock}
+            @input=${e => (this.minimumStock = e.target.value)}
           />
         </div>
-        <div class="w3-col m3" style="padding-left: 10px">
-          <label>Chức danh công việc</label>
+        <div class="w3-col m5" style="padding-left: 10px">
           <input
-            type="text"
-            class="w3-input"
-            .value=${this.jobTitle}
-            @input=${e => (this.jobTitle = e.target.value)}
+            class="w3-check"
+            type="checkbox"
+            .checked=${this.canSellWithOutStock}
+            @click=${() => {
+              this.canSellWithOutStock = !this.canSellWithOutStock;
+            }}
           />
+          <label>Có thể bán mà không cần tồn kho</label>
         </div>
       </div>
       <div class="w3-row" style="padding-top: 10px">
@@ -172,43 +184,44 @@ export class NewProduct extends LitElement {
           <input
             class="w3-check"
             type="checkbox"
-            .checked=${this.IsUser}
+            .checked=${this.mayBeProduce}
             @click=${() => {
-              this.IsUser = !this.IsUser;
+              this.mayBeProduce = !this.mayBeProduce;
             }}
           />
-          <label
-            >${this.IsUser ? 'Được quyền ' : 'Không được '} sử dụng phần
-            mềm</label
-          >
+          <label>Có thể sản xuất</label>
         </div>
         <div class="w3-col m4" style="padding-left: 10px">
-          <label>${this.IsUser ? 'User name' : 'Email'}</label>
           <input
-            type="text"
-            class="w3-input"
-            .value=${this.email}
-            @input=${e => (this.email = e.target.value)}
+            class="w3-check"
+            type="checkbox"
+            .checked=${this.mayBeBuy}
+            @click=${() => {
+              this.mayBeBuy = !this.mayBeBuy;
+            }}
           />
+          <label>Có thể mua</label>
         </div>
         <div class="w3-col m4" style="padding-left: 10px">
-          <label>Ngày bắt đầu làm việc</label>
           <input
-            type="date"
-            class="w3-input"
-            .value=${this.startDate}
-            @input=${e => (this.startDate = e.target.value)}
+            class="w3-check"
+            type="checkbox"
+            .checked=${this.mayBeSell}
+            @click=${() => {
+              this.mayBeSell = !this.mayBeSell;
+            }}
           />
+          <label>Có thể bán</label>
         </div>
       </div>
-      <div class="w3-row" style="padding-top: 10px">
-        <label>Mô tả công việc</label>
+      <div class="w3-row" style="padding-top: 20px">
+        <label>Ghi chú</label>
         <textarea
           rows="4"
           type="text"
           class="w3-input"
-          .value=${this.jobDescription}
-          @input=${e => (this.jobDescription = e.target.value)}
+          .value=${this.comment}
+          @input=${e => (this.comment = e.target.value)}
         ></textarea>
       </div>
       <div class="w3-row" style="padding-top: 10px">

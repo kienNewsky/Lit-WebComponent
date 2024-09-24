@@ -1,7 +1,7 @@
 import { LitElement, html, css } from 'lit';
 import { asyncFetch, productGroup } from '../core/hook.js';
 
-export class NewskySelectMeas extends LitElement {
+export class NewskySelectSegment extends LitElement {
   static properties = {
     defaultValue: { type: String, attribute: 'default-value' },
     defaultProductUrl: { type: String },
@@ -91,7 +91,7 @@ export class NewskySelectMeas extends LitElement {
   willUpdate(changedProperties) {
     if (changedProperties.has('categoryId')) {
       if (this.categoryId) {
-        const xx = measCat.find(
+        const xx = productGroup.find(
           element =>
             element.value.toString().toLowerCase() ===
             this.categoryId.toLowerCase(),
@@ -132,7 +132,8 @@ export class NewskySelectMeas extends LitElement {
   }
 
   async treeViewClick(event) {
-    // console.log(event); // it worked
+    // event.preventDefault();
+    console.log(event); // it worked
     try {
       this.categoryId = event.value.toString();
       this.fetchType = 'category';
@@ -154,7 +155,7 @@ export class NewskySelectMeas extends LitElement {
     this.selectedProduct = { id: event.detail.id, name: event.detail.name };
     // console.log("selected product: ", this.selectedProduct);
     this.dispatchEvent(
-      new CustomEvent('product-select', { detail: this.selectedProduct }),
+      new CustomEvent('segment-select', { detail: this.selectedProduct }),
     );
   }
 
@@ -193,18 +194,20 @@ export class NewskySelectMeas extends LitElement {
         rel="stylesheet"
       />
       <div class="w3-dropdown-hover">
-        Đơn vị tính (${this.categoryName})
+        Công đoạn sản xuất (${this.categoryName})
         <div class="w3-dropdown-content w3-card-4">
-          ${productGroup.map(
-            item => html`
-              <a
-                href="#"
-                class="w3-bar-item w3-button"
-                @click=${() => this.treeViewClick(item)}
-                >${item.name}</a
-              >
-            `,
-          )}
+          <div class="w3-bar-block">
+            ${productGroup.map(
+              item => html`
+                <a
+                  href="#"
+                  class="w3-bar-item w3-button "
+                  @click=${() => this.treeViewClick(item)}
+                  >${item.name}</a
+                >
+              `,
+            )}
+          </div>
         </div>
       </div>
       <newsky-autocomplete

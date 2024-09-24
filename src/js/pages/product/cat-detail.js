@@ -47,7 +47,7 @@ export class CatDetail extends LitElement {
           'new-product',
           () =>
             html`<new-product
-              .catId=${this.catId}
+              .extraCategoryID=${this.catId}
               .catName=${this.catName}
             ></new-product>`,
         ],

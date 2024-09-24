@@ -3,6 +3,7 @@ import { LitTreeView } from '../../component/newsky-treeview.js';
 import { NewskyTable } from '../../component/newsky-table.js';
 import { NewskySelectMeasCat } from '../../component/newsky-select-meascat.js';
 import { NewskySelectMeas } from '../../component/newsky-select-meas.js';
+import { NewskySelectSegment } from '../../component/newsky-select-segment.js';
 
 import { EditCategory } from './edit-category.js';
 import { NewCategory } from './new-category.js';
@@ -19,6 +20,7 @@ customElements.define('newsky-treeview', LitTreeView);
 customElements.define('newsky-table', NewskyTable);
 customElements.define('newsky-select-meas-cat', NewskySelectMeasCat);
 customElements.define('newsky-select-meas', NewskySelectMeas);
+customElements.define('newsky-select-segment', NewskySelectSegment);
 
 customElements.define('edit-category', EditCategory);
 customElements.define('new-category', NewCategory);

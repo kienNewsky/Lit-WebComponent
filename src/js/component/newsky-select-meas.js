@@ -154,7 +154,7 @@ export class NewskySelectMeas extends LitElement {
     this.selectedProduct = { id: event.detail.id, name: event.detail.name };
     // console.log("selected product: ", this.selectedProduct);
     this.dispatchEvent(
-      new CustomEvent('product-select', { detail: this.selectedProduct }),
+      new CustomEvent('meas-select', { detail: this.selectedProduct }),
     );
   }
 
@@ -199,16 +199,18 @@ export class NewskySelectMeas extends LitElement {
       <div class="w3-dropdown-hover">
         Đơn vị tính (${this.categoryName})
         <div class="w3-dropdown-content w3-card-4">
-          ${measCat.map(
-            item => html`
-              <a
-                href="#"
-                class="w3-bar-item w3-button"
-                @click=${() => this.treeViewClick(item)}
-                >${item.name}</a
-              >
-            `,
-          )}
+          <div class="w3-bar-block">
+            ${measCat.map(
+              item => html`
+                <a
+                  href="#"
+                  class="w3-bar-item w3-button"
+                  @click=${() => this.treeViewClick(item)}
+                  >${item.name}</a
+                >
+              `,
+            )}
+          </div>
         </div>
       </div>
       <newsky-autocomplete
