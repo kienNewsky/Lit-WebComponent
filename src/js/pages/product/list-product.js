@@ -19,8 +19,8 @@ export class ListProduct extends LitElement {
     this.rawData = [];
     this.columns = [
       { field: 'STT', header: 'STT', sort: false },
-      { field: 'nameStr', header: 'Ten san pham', sort: true },
-      { field: 'id', header: 'Tuoi', sort: true },
+      { field: 'nameStr', header: 'Tên sản phẩm', sort: true },
+      { field: 'id', header: 'Đơn vị tính', sort: true },
     ];
     this.keyConnected = false;
     // this.catId = 'EF70AFFD-1D65-4E12-B3E1-0103372A175E';
