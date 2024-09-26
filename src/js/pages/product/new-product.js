@@ -18,6 +18,7 @@ export class NewProduct extends LitElement {
     segmentID: { type: String },
     comment: { type: String },
     catName: { type: String },
+    productRel: { type: Array },
   };
 
   constructor() {
@@ -128,6 +129,10 @@ export class NewProduct extends LitElement {
     console.log('segment selected', event);
   }
 
+  classSelected(event) {
+    console.log('class selected', event);
+  }
+
   render() {
     return html`
       <link href="https://www.w3schools.com/w3css/4/w3.css" rel="stylesheet" />
@@ -212,6 +217,13 @@ export class NewProduct extends LitElement {
             }}
           />
           <label>Có thể bán</label>
+        </div>
+      </div>
+      <div class="w3-row" style="padding-top: 20px">
+        <div class="w3-col m6">
+          <newsky-select-class
+            @class-select=${this.classSelected}
+          ></newsky-select-class>
         </div>
       </div>
       <div class="w3-row" style="padding-top: 20px">

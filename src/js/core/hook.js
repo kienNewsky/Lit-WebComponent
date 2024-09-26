@@ -49,3 +49,11 @@ export const productGroup = [
   { value: 'SPC flooring', name: 'Sàn SPC' },
   { value: 'Multi Layer flooring', name: 'Sàn gỗ dán mặt melamin' },
 ];
+
+export const classType = [
+  { value: 'NONE', name: 'Không xác định' },
+  { value: 'SAN', name: 'Các loại sàn có thể bán' },
+  { value: 'DOOR', name: 'Các loại cửa có thể bán ' },
+  { value: 'SKIRTING', name: 'Các loại phào nẹp' },
+  { value: 'IMP PAPER', name: 'Các loại giấy tẩm' },
+];
