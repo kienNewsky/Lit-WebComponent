@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /* eslint-disable class-methods-use-this */
 import { LitElement, html, css } from 'lit';
 import { asyncFetch } from '../core/hook.js';
