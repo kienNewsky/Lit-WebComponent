@@ -1,5 +1,5 @@
 /* eslint-disable class-methods-use-this */
-import { LitElement, html } from 'lit';
+import { LitElement, html, css } from 'lit';
 import { asyncFetch } from '../core/hook.js';
 
 export class NewskyManageAttribute extends LitElement {
@@ -9,21 +9,31 @@ export class NewskyManageAttribute extends LitElement {
     attrDel: { type: Array },
     attrShow: { type: Array },
     productId: { type: String },
+    allAttr: { type: Array },
   };
+
+  static styles = css`
+    .hidden {
+      display: none !important;
+    }
+  `;
 
   constructor() {
     super();
     this.attrLoad = [];
     this.attrDel = [];
     this.attrNew = [];
+    this.allAttr = [];
+    this.attrShow = [];
   }
 
   connectedCallback() {
     super.connectedCallback();
-    if (this.productId) this.loadAttribute();
+    if (this.productId) this.loadProductAttribute();
+    this.loadAllAttribute();
   }
 
-  async loadAttribute() {
+  async loadProductAttribute() {
     try {
       const response = await asyncFetch(
         'GET',
@@ -44,9 +54,30 @@ export class NewskyManageAttribute extends LitElement {
     }
   }
 
+  async loadAllAttribute() {
+    try {
+      const response = await asyncFetch(
+        'GET',
+        window.sqlHost,
+        '/product-service/ProductAttribute',
+        window.token,
+        window.username,
+      );
+      if (!response.ok) {
+        throw new Error(`Response status: ${response.status}`);
+      }
+      const data = await response.json();
+      if (data) {
+        this.allAttr = [...data];
+      } else this.allAttr = [];
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
   willUpdate(changedProperties) {
-    if (changedProperties.has('productId')) {
-      this.loadAttribute();
+    if (changedProperties.has('productId') && this.productId) {
+      this.loadProductAttribute();
     }
 
     if (
@@ -54,20 +85,29 @@ export class NewskyManageAttribute extends LitElement {
       changedProperties.has('attrNew') ||
       changedProperties.has('attrDel')
     ) {
-      const xx = [...this.attrLoad, this.attrNew];
+      const xx = [...this.attrLoad, ...this.attrNew];
+      console.log('xx: ', xx);
+
       this.attrShow = xx.filter(
         item =>
           !this.attrDel.some(
             delItem => delItem.Id.toLowerCase() === item.Id.toLowerCase(),
           ),
       );
+      console.log('attr Show: ', this.attrShow);
     }
   }
 
   addAttribute(event) {
     // eslint-disable-next-line no-console
     console.log('attribute in tree view clicked: ', event);
-    // add new attribute
+    try {
+      // add new attribute
+      const xx = this.shadowRoot.querySelector('.w3-dropdown-content');
+      xx.classList.add('hidden');
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   delAttribute(event) {
@@ -85,8 +125,9 @@ export class NewskyManageAttribute extends LitElement {
         >
           <div class="w3-container">
             <newsky-treeview
-              .rawData=${this.attrShow}
+              .rawData=${this.allAttr}
               @node-clicked=${this.addAttribute}
+              cat-name="attName"
             ></newsky-treeview>
           </div>
         </div>

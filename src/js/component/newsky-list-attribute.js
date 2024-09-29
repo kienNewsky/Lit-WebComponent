@@ -34,29 +34,31 @@ export class ShowListAttribute extends LitElement {
           </tr>
         </thead>
         <tbody>
-          ${this.listAttr.map(
-            (item, idx) => html`
-              <tr>
-                <td>${idx + 1}</td>
-                <td>
-                  <newsky-category-chain
-                    cat-id=${item.Id}
-                    url="/product-service/ProductAttribute/getAttributeChain"
-                    cat-name="attName"
-                  ></newsky-category-chain>
-                </td>
-                <td>
-                  <a
-                    href="#"
-                    class="w3-text-red"
-                    @click=${e => this.attrClick(e, item.productRelationId)}
-                  >
-                    <i class="fa fa-solid fa-trash"></i>
-                  </a>
-                </td>
-              </tr>
-            `,
-          )}
+          ${this.listAttr.length > 0
+            ? this.listAttr.map(
+                (item, idx) => html`
+                  <tr>
+                    <td>${idx + 1}</td>
+                    <td>
+                      <newsky-category-chain
+                        cat-id=${item.Id}
+                        url="/product-service/ProductAttribute/getAttributeChain"
+                        cat-name="attName"
+                      ></newsky-category-chain>
+                    </td>
+                    <td>
+                      <a
+                        href="#"
+                        class="w3-text-red"
+                        @click=${e => this.attrClick(e, item.productRelationId)}
+                      >
+                        <i class="fa fa-solid fa-trash"></i>
+                      </a>
+                    </td>
+                  </tr>
+                `,
+              )
+            : ''}
         </tbody>
       </table>
     `;
