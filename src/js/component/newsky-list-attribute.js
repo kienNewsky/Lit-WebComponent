@@ -12,10 +12,14 @@ export class ShowListAttribute extends LitElement {
 
   attrClick(e, relId) {
     // e.preventDefault();
-    console.log('delete attribute: ', relId);
+    // console.log('delete attribute: ', relId);
 
     this.dispatchEvent(new CustomEvent('delete-attribute', { detail: relId }));
   }
+
+  // willUpdate(changedProperties) {
+  //   console.log('List Attr in newsky-list-attribute: ', this.listAttr);
+  // }
 
   render() {
     return html`
@@ -34,31 +38,29 @@ export class ShowListAttribute extends LitElement {
           </tr>
         </thead>
         <tbody>
-          ${this.listAttr.length > 0
-            ? this.listAttr.map(
-                (item, idx) => html`
-                  <tr>
-                    <td>${idx + 1}</td>
-                    <td>
-                      <newsky-category-chain
-                        cat-id=${item.Id}
-                        url="/product-service/ProductAttribute/getAttributeChain"
-                        cat-name="attName"
-                      ></newsky-category-chain>
-                    </td>
-                    <td>
-                      <a
-                        href="#"
-                        class="w3-text-red"
-                        @click=${e => this.attrClick(e, item.productRelationId)}
-                      >
-                        <i class="fa fa-solid fa-trash"></i>
-                      </a>
-                    </td>
-                  </tr>
-                `,
-              )
-            : ''}
+          ${this.listAttr.map(
+            (item, idx) => html`
+              <tr>
+                <td>${idx + 1}</td>
+                <td>
+                  <newsky-category-chain
+                    cat-id=${item.Id}
+                    url="/product-service/ProductAttribute/getAttributeChain"
+                    cat-name="attName"
+                  ></newsky-category-chain>
+                </td>
+                <td>
+                  <a
+                    href="#"
+                    class="w3-text-red"
+                    @click=${e => this.attrClick(e, item)}
+                  >
+                    <i class="fa fa-solid fa-trash"></i>
+                  </a>
+                </td>
+              </tr>
+            `,
+          )}
         </tbody>
       </table>
     `;

@@ -237,6 +237,9 @@ export class NewProduct extends LitElement {
         ></textarea>
       </div>
       <div class="w3-row" style="padding-top: 10px">
+        <newsky-manage-attribute></newsky-manage-attribute>
+      </div>
+      <div class="w3-row" style="padding-top: 10px">
         <button
           class="w3-button w3-teal w3-round-xlarge"
           @click=${this.saveProduct}

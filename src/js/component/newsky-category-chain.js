@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { LitElement, html } from 'lit';
 import { asyncFetch } from '../core/hook.js';
 
@@ -17,11 +18,11 @@ export class NewskyCategoryChain extends LitElement {
     if (!this.catName) this.catName = 'catName';
   }
 
-  connectedCallback() {
-    super.connectedCallback();
+  // connectedCallback() {
+  //   super.connectedCallback();
 
-    this.loadChain();
-  }
+  //   this.loadChain();
+  // }
 
   async loadChain() {
     try {
@@ -47,6 +48,7 @@ export class NewskyCategoryChain extends LitElement {
   }
 
   willUpdate(changedProperties) {
+    if (changedProperties.has('catId')) this.loadChain();
     if (changedProperties.has('chain')) {
       let str = '';
       const chainLength = this.chain.length;
