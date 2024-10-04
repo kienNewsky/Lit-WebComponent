@@ -6,7 +6,7 @@ import { asyncFetch } from '../../core/hook.js';
 export class NewProduct extends LitElement {
   static properties = {
     nameStr: { type: String },
-    MeasId: { type: String },
+    MeasID: { type: String },
     extraCategoryID: { type: String },
     minimumStock: { type: Number },
     mayBeBuy: { type: Boolean },
@@ -24,7 +24,7 @@ export class NewProduct extends LitElement {
   constructor() {
     super();
     this.nameStr = '';
-    this.MeasId = '';
+    this.MeasID = '';
     this.extraCategoryID = '';
     this.minimumStock = 0;
     this.mayBeBuy = false;
@@ -39,6 +39,21 @@ export class NewProduct extends LitElement {
 
   async saveProduct(event) {
     event.preventDefault();
+    // console.log('data to save: ', {
+    //   nameStr: this.nameStr,
+    //   MeasID: this.MeasID,
+    //   extraCategoryID: this.extraCategoryID,
+    //   minimumStock: this.minimumStock,
+    //   mayBeBuy: this.mayBeBuy,
+    //   mayBeSell: this.mayBeSell,
+    //   mayBeProduce: this.mayBeProduce,
+    //   canSellWithOutStock: this.canSellWithOutStock,
+    //   disContinue: this.disContinue,
+    //   classPriceID: this.classPriceID,
+    //   segmentID: this.segmentID,
+    //   comment: this.comment,
+    // });
+
     try {
       const response = await asyncFetch(
         'POST',
@@ -48,7 +63,7 @@ export class NewProduct extends LitElement {
         window.username,
         {
           nameStr: this.nameStr,
-          MeasId: this.MeasId,
+          MeasID: this.MeasID,
           extraCategoryID: this.extraCategoryID,
           minimumStock: this.minimumStock,
           mayBeBuy: this.mayBeBuy,
@@ -67,43 +82,18 @@ export class NewProduct extends LitElement {
       const data = await response.json();
 
       if (data) {
-        this.saveProductRelation(data.id);
+        // this.saveProductRelation(data.id);
+        const kk = this.shadowRoot.querySelector('newsky-manage-attribute');
+        if (kk) {
+          kk.persistData(data.id);
+        }
         this.dispatchEvent(
-          new CustomEvent('addnew-employee', {
+          new CustomEvent('addnew-product', {
             bubbles: true,
             composed: true,
             detail: data, // { ...data, parentId: this.parentId },
           }),
         );
-      }
-    } catch (e) {
-      console.log(e);
-    }
-  }
-
-  async saveProductRelation(empId) {
-    try {
-      const response = await asyncFetch(
-        'POST',
-        window.sqlHost,
-        `/employee-service/employeeRelation`,
-        window.token,
-        window.username,
-        {
-          relTable: 'department',
-          relId: this.deptId,
-          employeeId: empId,
-          relType: 'job history',
-          relData: `{"startDate": "${isValidDateStrict(this.startDate) ? this.startDate : null}"}`,
-        },
-      );
-      if (!response.ok) {
-        throw new Error(`Response status: ${response.status}`);
-      }
-      const data = await response.json();
-
-      if (data) {
-        //
       }
     } catch (e) {
       console.log(e);
@@ -122,15 +112,18 @@ export class NewProduct extends LitElement {
   }
 
   measSelected(event) {
-    console.log('meas selected', event);
+    this.MeasID = event.detail.id;
+    // console.log('meas selected', event);
   }
 
   segmentSelected(event) {
-    console.log('segment selected', event);
+    this.segmentID = event.detail.id;
+    // console.log('segment selected', event);
   }
 
   classSelected(event) {
-    console.log('class selected', event);
+    this.classPriceID = event.detail.id;
+    // console.log('class selected', event);
   }
 
   render() {

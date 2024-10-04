@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable no-alert */
 /* eslint-disable no-console */
 /* eslint-disable class-methods-use-this */
@@ -170,6 +171,83 @@ export class NewskyManageAttribute extends LitElement {
 
   delAttribute(event) {
     this.attrDel = [...this.attrDel, event.detail];
+  }
+
+  persistData(newProductId) {
+    console.log('attr New: ', this.attrNew);
+    console.log('attr Del: ', this.attrDel);
+    console.log('attr show: ', this.attrShow);
+
+    const xx = this.productId ? this.productId : newProductId;
+    this.removeAttribute();
+    this.saveNewAttribute(xx);
+  }
+
+  removeAttribute() {
+    this.attrDel.forEach(item => {
+      if (item.productRellationId) {
+        this.removeProductAttribute(item.productRellationId);
+      }
+    });
+  }
+
+  saveNewAttribute(newId) {
+    this.attrNew.forEach(item => {
+      this.saveNewProductAttribute(item, newId);
+    });
+  }
+
+  async removeProductAttribute(id) {
+    try {
+      const response = await asyncFetch(
+        'DELETE',
+        window.sqlHost,
+        `/product-service/productRelation/${id}`,
+        window.token,
+        window.username,
+      );
+      if (!response.ok) {
+        throw new Error(`Response status: ${response.status}`);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  async saveNewProductAttribute(item, newProductId) {
+    /**
+     @Column(name = "RelTable", columnDefinition = "nvarchar(255)")
+    private String relTable;
+    @Column(name = "ProductId")
+    private UUID productId;
+    @Column(name = "RelId")
+    private UUID relId;
+    @Column(name = "RelType", columnDefinition = "nvarchar(255)")
+    private String relType;
+    @Column(name = "RelData", columnDefinition = "nvarchar(4000)")
+    private String relData;
+     */
+    try {
+      const response = await asyncFetch(
+        'POST',
+        window.sqlHost,
+        `/product-service/productRelation`,
+        window.token,
+        window.username,
+        {
+          relTable: 'ProductAttribute',
+          productId: newProductId,
+          relId: item.Id,
+          relType: 'Attribute',
+          relData: null,
+        },
+      );
+      if (!response.ok) {
+        throw new Error(`Response status: ${response.status}`);
+      }
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   render() {

@@ -133,7 +133,7 @@ export class NewskySelectSegment extends LitElement {
 
   async treeViewClick(event) {
     // event.preventDefault();
-    console.log(event); // it worked
+    // console.log(event); // it worked
     try {
       this.categoryId = event.value.toString();
       this.fetchType = 'category';
