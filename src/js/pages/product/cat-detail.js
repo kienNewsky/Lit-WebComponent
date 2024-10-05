@@ -53,7 +53,7 @@ export class CatDetail extends LitElement {
         ],
         [
           'edit-product',
-          () => html`<edit-product .empId=${this.empId}></edit-product>`,
+          () => html`<edit-product .productId=${this.empId}></edit-product>`,
         ],
       ])}
     `;

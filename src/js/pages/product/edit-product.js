@@ -1,59 +1,56 @@
+/* eslint-disable no-console */
+/* eslint-disable class-methods-use-this */
 /* eslint-disable no-return-assign */
 import { LitElement, html } from 'lit';
-import { asyncFetch, isValidDateStrict } from '../../core/hook.js';
+import { asyncFetch } from '../../core/hook.js';
 
 export class EditProduct extends LitElement {
   static properties = {
-    empId: { type: String },
-    deptId: { type: String },
-    lastName: { type: String },
-    firstName: { type: String },
-    jobTitle: { type: String },
-    sex: { type: String },
-    birthDate: { type: String },
-    startDate: { type: String },
-    address: { type: String },
-    handPhone: { type: String },
-    email: { type: String },
-    IsUser: { type: Boolean },
-    jobDescription: { type: String },
-    keyRender: { type: Number },
+    nameStr: { type: String },
+    MeasID: { type: String },
+    extraCategoryID: { type: String },
+    minimumStock: { type: Number },
+    mayBeBuy: { type: Boolean },
+    mayBeSell: { type: Boolean },
+    mayBeProduce: { type: Boolean },
+    canSellWithOutStock: { type: Boolean },
+    disContinue: { type: Boolean },
+    classPriceID: { type: String },
+    segmentID: { type: String },
+    comment: { type: String },
+    catName: { type: String },
+    productRel: { type: Array },
+
+    productId: { type: Array },
   };
 
   constructor() {
     super();
-    this.lastName = '';
-    this.firstName = '';
-    this.jobTitle = '';
-    this.sex = 'female';
-    this.birthDate = '';
-    this.startDate = '';
-    this.address = '';
-    this.handPhone = '';
-    this.email = '';
-    this.IsUser = false;
-    this.jobDescription = '';
-
-    this.keyRender = 0;
-  }
-
-  connectedCallback() {
-    super.connectedCallback();
-    this.loadCurrEmployee();
-    this.keyRender += 1;
+    this.nameStr = '';
+    this.MeasID = '';
+    this.extraCategoryID = '';
+    this.minimumStock = 0;
+    this.mayBeBuy = false;
+    this.mayBeSell = false;
+    this.mayBeProduce = false;
+    this.canSellWithOutStock = false;
+    this.disContinue = false;
+    this.classPriceID = '';
+    this.segmentID = '';
+    this.comment = '';
   }
 
   willUpdate(changedProperties) {
-    if (changedProperties.has('empId') && this.keyRender > 0)
-      this.loadCurrEmployee();
+    if (changedProperties.has('productId') && this.productId)
+      this.loadCurrentProduct();
   }
 
-  async loadCurrEmployee() {
+  async loadCurrentProduct() {
     try {
       const response = await asyncFetch(
         'GET',
         window.sqlHost,
-        `/employee-service/employee/${this.empId}`,
+        `/product-service/product/${this.productId}`,
         window.token,
         window.username,
       );
@@ -61,46 +58,64 @@ export class EditProduct extends LitElement {
         throw new Error(`Response status: ${response.status}`);
       }
       const data = await response.json();
+      // console.log('curent product: ', data);
 
       if (data) {
-        // this.saveEmployeeRelation(data.id);
-        this.lastName = data.lastName;
-        this.firstName = data.firstName;
-        this.jobTitle = data.title;
-        this.sex = data.sex;
-        this.birthDate = data.birthDate;
-        // this.startDate = '';
-        this.address = data.address;
-        this.handPhone = data.handPhone;
-        this.email = data.email;
-        this.IsUser = data.isUser;
-        this.jobDescription = data.jobDescription;
+        this.nameStr = data.nameStr;
+        this.MeasID = data.MeasID;
+        this.extraCategoryID = data.extraCategoryID;
+        this.minimumStock = data.minimumStock;
+        this.mayBeBuy = data.mayBeBuy;
+        this.mayBeSell = data.mayBeSell;
+        this.mayBeProduce = data.mayBeProduce;
+        this.canSellWithOutStock = data.canSellWithOutStock;
+        this.disContinue = data.disContinue;
+        this.classPriceID = data.classPriceID;
+        this.segmentID = data.segmentID;
+        this.comment = data.comment;
       }
     } catch (e) {
       console.log(e);
     }
   }
 
-  async saveEmployee(event) {
+  async saveProduct(event) {
     event.preventDefault();
+    // console.log('data to save: ', {
+    //   nameStr: this.nameStr,
+    //   MeasID: this.MeasID,
+    //   extraCategoryID: this.extraCategoryID,
+    //   minimumStock: this.minimumStock,
+    //   mayBeBuy: this.mayBeBuy,
+    //   mayBeSell: this.mayBeSell,
+    //   mayBeProduce: this.mayBeProduce,
+    //   canSellWithOutStock: this.canSellWithOutStock,
+    //   disContinue: this.disContinue,
+    //   classPriceID: this.classPriceID,
+    //   segmentID: this.segmentID,
+    //   comment: this.comment,
+    // });
+
     try {
       const response = await asyncFetch(
         'PUT',
         window.sqlHost,
-        `/employee-service/employee/${this.empId}`,
+        `/product-service/product/${this.productId}`,
         window.token,
         window.username,
         {
-          lastName: this.lastName,
-          firstName: this.firstName,
-          title: this.jobTitle,
-          sex: this.sex,
-          birthDate: isValidDateStrict(this.birthDate) ? this.birthDate : null,
-          address: this.address,
-          handPhone: this.handPhone,
-          email: this.email,
-          IsUser: this.IsUser,
-          jobDescription: this.jobDescription,
+          nameStr: this.nameStr,
+          MeasID: this.MeasID,
+          extraCategoryID: this.extraCategoryID,
+          minimumStock: this.minimumStock,
+          mayBeBuy: this.mayBeBuy,
+          mayBeSell: this.mayBeSell,
+          mayBeProduce: this.mayBeProduce,
+          canSellWithOutStock: this.canSellWithOutStock,
+          disContinue: this.disContinue,
+          classPriceID: this.classPriceID,
+          segmentID: this.segmentID,
+          comment: this.comment,
         },
       );
       if (!response.ok) {
@@ -109,43 +124,18 @@ export class EditProduct extends LitElement {
       const data = await response.json();
 
       if (data) {
-        // this.saveEmployeeRelation(data.id);
+        // this.saveProductRelation(data.id);
+        const kk = this.shadowRoot.querySelector('newsky-manage-attribute');
+        if (kk) {
+          kk.persistData(data.id);
+        }
         this.dispatchEvent(
-          new CustomEvent('save-edit-employee', {
+          new CustomEvent('addnew-product', {
             bubbles: true,
             composed: true,
             detail: data, // { ...data, parentId: this.parentId },
           }),
         );
-      }
-    } catch (e) {
-      console.log(e);
-    }
-  }
-
-  async saveEmployeeRelation(empId) {
-    try {
-      const response = await asyncFetch(
-        'POST',
-        window.sqlHost,
-        `/employee-service/employeeRelation`,
-        window.token,
-        window.username,
-        {
-          relTable: 'department',
-          relId: this.deptId,
-          employeeId: empId,
-          relType: 'job history',
-          relData: `{"startDate": "${isValidDateStrict(this.startDate) ? this.startDate : null}"}`,
-        },
-      );
-      if (!response.ok) {
-        throw new Error(`Response status: ${response.status}`);
-      }
-      const data = await response.json();
-
-      if (data) {
-        //
       }
     } catch (e) {
       console.log(e);
@@ -163,79 +153,72 @@ export class EditProduct extends LitElement {
     );
   }
 
+  measSelected(event) {
+    this.MeasID = event.detail.id;
+    // console.log('meas selected', event);
+  }
+
+  segmentSelected(event) {
+    this.segmentID = event.detail.id;
+    // console.log('segment selected', event);
+  }
+
+  classSelected(event) {
+    this.classPriceID = event.detail.id;
+    // console.log('class selected', event);
+  }
+
   render() {
     return html`
       <link href="https://www.w3schools.com/w3css/4/w3.css" rel="stylesheet" />
       <div class="w3-row">
-        <span class="w3-xxlarge w3-text-indigo">Tuyển dụng một nhân viên</span>
+        <span class="w3-xlarge w3-text-indigo"
+          >Thêm một sản phẩm ${this.catName}</span
+        >
       </div>
       <div class="w3-row" style="padding-top: 10px">
-        <div class="w3-col m3">
-          <label>Họ</label>
+        <div class="w3-col m8">
+          <label>Tên sản phẩm</label>
           <input
             type="text"
             class="w3-input"
-            .value=${this.lastName}
-            @input=${e => (this.lastName = e.target.value)}
+            .value=${this.nameStr}
+            @input=${e => (this.nameStr = e.target.value)}
           />
         </div>
-        <div class="w3-col m3" style="padding-left: 10px">
-          <label>Tên</label>
-          <input
-            type="text"
-            class="w3-input"
-            .value=${this.firstName}
-            @input=${e => (this.firstName = e.target.value)}
-          />
-        </div>
-        <div class="w3-col m3" style="padding-left: 10px">
-          <label>Ngày sinh</label>
-          <input
-            type="date"
-            class="w3-input"
-            .value=${this.birthDate}
-            @input=${e => (this.birthDate = e.target.value)}
-          />
-        </div>
-        <div class="w3-col m3" style="padding-left: 10px">
-          <label>Giới tính</label>
-          <select
-            class="w3-select"
-            .value=${this.sex}
-            @change=${e => (this.sex = e.target.value)}
-          >
-            <option value="male">Nam</option>
-            <option value="female">Nữ</option>
-          </select>
+        <div class="w3-col m4" style="padding-left: 10px">
+          <newsky-select-meas
+            .defaultValue=${this.MeasID}
+            @meas-select=${this.measSelected}
+          ></newsky-select-meas>
         </div>
       </div>
       <div class="w3-row" style="padding-top: 10px">
-        <div class="w3-col m6">
-          <label>Địa chỉ </label>
-          <input
-            type="text"
-            class="w3-input"
-            .value=${this.address}
-            @input=${e => (this.address = e.target.value)}
-          />
+        <div class="w3-col m4">
+          <newsky-select-segment
+            .defaultValue=${this.segmentID}
+            @segment-select=${this.segmentSelected}
+          ></newsky-select-segment>
         </div>
         <div class="w3-col m3" style="padding-left: 10px">
-          <label>Số điện thoại</label>
+          <label>Số tồn kho tối thiểu</label>
           <input
             type="text"
             class="w3-input"
-            .value=${this.handPhone}
-            @input=${e => (this.handPhone = e.target.value)}
+            .value=${this.minimumStock}
+            @input=${e => (this.minimumStock = e.target.value)}
           />
         </div>
-        <div class="w3-col m3" style="padding-left: 10px">
-          <label>Chức danh công việc</label>
+        <div class="w3-col m5" style="padding-left: 10px">
           <input
-            type="text"
-            class="w3-input"
-            .value=${this.jobTitle}
-            @input=${e => (this.jobTitle = e.target.value)}
+            class="w3-check"
+            type="checkbox"
+            .checked=${this.canSellWithOutStock}
+            @click=${() => {
+              this.canSellWithOutStock = !this.canSellWithOutStock;
+            }}
           />
+          <label>Có thể bán mà không cần tồn kho</label>
         </div>
       </div>
       <div class="w3-row" style="padding-top: 10px">
@@ -243,40 +226,63 @@ export class EditProduct extends LitElement {
           <input
             class="w3-check"
             type="checkbox"
-            .checked=${this.IsUser}
+            .checked=${this.mayBeProduce}
             @click=${() => {
-              this.IsUser = !this.IsUser;
+              this.mayBeProduce = !this.mayBeProduce;
             }}
           />
-          <label
-            >${this.IsUser ? 'Được quyền ' : 'Không được '} sử dụng phần
-            mềm</label
-          >
+          <label>Có thể sản xuất</label>
         </div>
         <div class="w3-col m4" style="padding-left: 10px">
-          <label>${this.IsUser ? 'User name' : 'Email'}</label>
           <input
-            type="text"
-            class="w3-input"
-            .value=${this.email}
-            @input=${e => (this.email = e.target.value)}
+            class="w3-check"
+            type="checkbox"
+            .checked=${this.mayBeBuy}
+            @click=${() => {
+              this.mayBeBuy = !this.mayBeBuy;
+            }}
           />
+          <label>Có thể mua</label>
+        </div>
+        <div class="w3-col m4" style="padding-left: 10px">
+          <input
+            class="w3-check"
+            type="checkbox"
+            .checked=${this.mayBeSell}
+            @click=${() => {
+              this.mayBeSell = !this.mayBeSell;
+            }}
+          />
+          <label>Có thể bán</label>
         </div>
       </div>
-      <div class="w3-row" style="padding-top: 10px">
-        <label>Mô tả công việc</label>
+      <div class="w3-row" style="padding-top: 20px">
+        <div class="w3-col m6">
+          <newsky-select-class
+            .defaultValue=${this.classPriceID}
+            @class-select=${this.classSelected}
+          ></newsky-select-class>
+        </div>
+      </div>
+      <div class="w3-row" style="padding-top: 20px">
+        <label>Ghi chú</label>
         <textarea
           rows="4"
           type="text"
           class="w3-input"
-          .value=${this.jobDescription}
-          @input=${e => (this.jobDescription = e.target.value)}
+          .value=${this.comment}
+          @input=${e => (this.comment = e.target.value)}
         ></textarea>
+      </div>
+      <div class="w3-row" style="padding-top: 10px">
+        <newsky-manage-attribute
+          .productId=${this.productId}
+        ></newsky-manage-attribute>
       </div>
       <div class="w3-row" style="padding-top: 10px">
         <button
           class="w3-button w3-teal w3-round-xlarge"
-          @click=${this.saveEmployee}
+          @click=${this.saveProduct}
         >
           Save
         </button>

@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { LitElement, html, css } from 'lit';
 import { asyncFetch, measCat } from '../core/hook.js';
 
@@ -26,7 +27,7 @@ export class NewskySelectMeas extends LitElement {
   constructor() {
     super();
     if (!this.defaultValue) this.defaultValue = '';
-    if (!this.defaultValue) {
+    if (this.defaultValue) {
       this.makeUrl();
     } else {
       this.defaultProductUrl = '';
@@ -43,6 +44,7 @@ export class NewskySelectMeas extends LitElement {
   makeUrl() {
     this.defaultProductUrl = `/product-service/Measurement/oneForSelect/${this.defaultValue}`;
     this.initialUrl = `/product-service/Measurement/firstCall/${this.defaultValue}`;
+    // console.log('default Url: ', this.defaultProductUrl); // it worked
   }
 
   async fetchDefaultProduct() {
@@ -83,6 +85,7 @@ export class NewskySelectMeas extends LitElement {
           id: item.id,
           name: item.nameStr,
         }));
+      // console.log('product data: ', this.productData);
     } catch (e) {
       console.log(e);
     }
@@ -101,18 +104,21 @@ export class NewskySelectMeas extends LitElement {
     }
 
     if (changedProperties.has('defaultValue')) {
+      this.loadDefault();
+    }
+  }
+
+  loadDefault() {
+    if (this.defaultValue) {
       this.makeUrl();
+      this.fetchDefaultProduct();
+      this.fetchProductList(this.initialUrl);
     }
   }
 
   connectedCallback() {
     super.connectedCallback();
-    if (this.defaultValue) {
-      this.makeUrl();
-      this.fetchDefaultProduct();
-      // this.fetchFirstCall();
-      this.fetchProductList(this.initialUrl);
-    }
+    this.loadDefault();
     // this.fetchAllCat();
   }
 

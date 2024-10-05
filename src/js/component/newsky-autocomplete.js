@@ -48,8 +48,8 @@ export class AutocompleteComponent extends LitElement {
         item[this.col1].toString().toLowerCase() ==
         this.defaultValue.toLowerCase(),
     );
-    console.log(xx);
-    if (xx > 0) {
+    // console.log(xx);
+    if (xx >= 0) {
       const yy = this.filteredSuggestions.at(xx);
       this.inputValue = yy[this.col2];
       this.highlightedIndex = xx;
@@ -65,7 +65,7 @@ export class AutocompleteComponent extends LitElement {
 
       this.findDefaultItem();
 
-      // console.log(this.filteredSuggestions);
+      // console.log('filter suggestion: ', this.filteredSuggestions);
       this.showSuggestions = false;
       // this.highlightedIndex = -1;
     }
@@ -77,6 +77,8 @@ export class AutocompleteComponent extends LitElement {
 
   connectedCallback() {
     super.connectedCallback();
+    console.log('default value: ', this.defaultValue);
+
     document.addEventListener('click', this.handleClickOutside.bind(this));
   }
 

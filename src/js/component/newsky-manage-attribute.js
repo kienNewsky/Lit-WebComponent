@@ -74,6 +74,7 @@ export class NewskyManageAttribute extends LitElement {
           status: 'recorded',
           action: 'none',
         }));
+        console.log('attr Load: ', this.attrLoad);
       } else this.attrLoad = [];
     } catch (e) {
       console.log(e);

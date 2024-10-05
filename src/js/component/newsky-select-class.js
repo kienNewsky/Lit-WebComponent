@@ -101,19 +101,21 @@ export class NewskySelectClass extends LitElement {
     }
 
     if (changedProperties.has('defaultValue')) {
+      this.loadDefault();
+    }
+  }
+
+  loadDefault() {
+    if (this.defaultValue) {
       this.makeUrl();
+      this.fetchDefaultProduct();
+      this.fetchProductList(this.initialUrl);
     }
   }
 
   connectedCallback() {
     super.connectedCallback();
-    if (this.defaultValue) {
-      this.makeUrl();
-      this.fetchDefaultProduct();
-      // this.fetchFirstCall();
-      this.fetchProductList(this.initialUrl);
-    }
-    // this.fetchAllCat();
+    this.loadDefault();
   }
 
   firstUpdated() {
