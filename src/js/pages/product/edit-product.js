@@ -181,7 +181,7 @@ export class EditProduct extends LitElement {
           <label>Tên sản phẩm</label>
           <input
             type="text"
-            class="w3-input"
+            class="w3-input w3-border"
             .value=${this.nameStr}
             @input=${e => (this.nameStr = e.target.value)}
           />
@@ -204,12 +204,12 @@ export class EditProduct extends LitElement {
           <label>Số tồn kho tối thiểu</label>
           <input
             type="text"
-            class="w3-input"
+            class="w3-input w3-border"
             .value=${this.minimumStock}
             @input=${e => (this.minimumStock = e.target.value)}
           />
         </div>
-        <div class="w3-col m5" style="padding-left: 10px">
+        <div class="w3-col m5" style="padding-left: 10px; padding-top: 22px">
           <input
             class="w3-check"
             type="checkbox"
@@ -269,7 +269,7 @@ export class EditProduct extends LitElement {
         <textarea
           rows="4"
           type="text"
-          class="w3-input"
+          class="w3-input w3-border"
           .value=${this.comment}
           @input=${e => (this.comment = e.target.value)}
         ></textarea>

@@ -77,7 +77,7 @@ export class AutocompleteComponent extends LitElement {
 
   connectedCallback() {
     super.connectedCallback();
-    console.log('default value: ', this.defaultValue);
+    // console.log('default value: ', this.defaultValue);
 
     document.addEventListener('click', this.handleClickOutside.bind(this));
   }
@@ -201,7 +201,7 @@ export class AutocompleteComponent extends LitElement {
       <div class="autocomplete" @click="${this.handleInsideClick}">
         <div class="input-wrapper">
           <input
-            class="w3-input"
+            class="w3-input w3-border"
             type="text"
             .value="${this.inputValue}"
             @input="${this.filterSuggestions}"

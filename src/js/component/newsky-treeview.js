@@ -85,6 +85,20 @@ export class LitTreeView extends LitElement {
     this.nodeIdShow = '';
   }
 
+  // connectedCallback() {
+  //   super.connectedCallback();
+  //   this.addEventListener('cancel-detail', this.listenCancel);
+  // }
+
+  // disconnectedCallback() {
+  //   super.disconnectedCallback();
+  //   this.removeEventListener('cancel-detail', this.listenCancel);
+  // }
+
+  // listenCancel() {
+  //   console.log('Cancel button clicked');
+  // }
+
   willUpdate(changedProperties) {
     if (changedProperties.has('rawData')) {
       this.treeData = this.buildTree(this.rawData);

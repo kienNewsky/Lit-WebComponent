@@ -70,11 +70,11 @@ export class NewskyManageAttribute extends LitElement {
       if (data) {
         this.attrLoad = JSON.parse(data).map(item => ({
           Id: item.Id,
-          productRellationId: item.productRellationId,
+          productRellationId: item.productRelationId,
           status: 'recorded',
           action: 'none',
         }));
-        console.log('attr Load: ', this.attrLoad);
+        // console.log('attr Load: ', this.attrLoad);
       } else this.attrLoad = [];
     } catch (e) {
       console.log(e);
@@ -104,9 +104,9 @@ export class NewskyManageAttribute extends LitElement {
 
   willUpdate(changedProperties) {
     if (changedProperties.has('productId') && this.productId) {
-      console.log(
-        `/product-service/ProductAttribute/getProductAttribute/${this.productId}`,
-      );
+      // console.log(
+      //   `/product-service/ProductAttribute/getProductAttribute/${this.productId}`,
+      // );
 
       this.loadProductAttribute();
     }
