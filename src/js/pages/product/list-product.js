@@ -24,6 +24,7 @@ export class ListProduct extends LitElement {
     ];
     this.keyConnected = false;
     // this.catId = 'EF70AFFD-1D65-4E12-B3E1-0103372A175E';
+    this.swapCatSucceed = this.swapCatSucceed.bind(this);
   }
 
   connectedCallback() {
@@ -31,11 +32,13 @@ export class ListProduct extends LitElement {
     this.urlData = `/product-service/product/sql/select/cat-id/${this.catId}`;
     this.loadProduct();
     this.keyConnected = true;
+    document.addEventListener('swap-product-category', this.swapCatSucceed);
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
     this.keyConnected = false;
+    document.removeEventListener('swap-product-category', this.swapCatSucceed);
   }
 
   willUpdate(changedProperties) {
@@ -43,6 +46,15 @@ export class ListProduct extends LitElement {
       this.urlData = `/product-service/product/sql/select/cat-id/${this.catId}`;
       this.loadProduct();
     }
+  }
+
+  swapCatSucceed(event) {
+    const productId = event.detail.id;
+    this.rawData = [
+      ...this.rawData.filter(
+        item => item.Id.toLowerCase() !== productId.toLowerCase(),
+      ),
+    ];
   }
 
   async loadProduct() {

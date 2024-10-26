@@ -47,6 +47,10 @@ export class NewskyTable extends LitElement {
     }
   }
 
+  catChange(e) {
+    this.pageSize = Number(e.target.value);
+  }
+
   render() {
     return html`
       <link href="https://www.w3schools.com/w3css/4/w3.css" rel="stylesheet" />
@@ -94,6 +98,17 @@ export class NewskyTable extends LitElement {
           >
             Previous
           </button>
+
+          <select
+            class="w3-select w3-bar-item w3-right"
+            .value=${this.pageSize.toString()}
+            @change=${this.catChange}
+          >
+            <option value="10" selected>10</option>
+            <option value="15">15</option>
+            <option value="20">20</option>
+          </select>
+          <span class="w3-bar-item w3-right">Page size</span>
         </div>
       </div>
     `;
@@ -120,7 +135,14 @@ export class NewskyTable extends LitElement {
   renderRow() {
     return this.pageData.map(
       (item, idx) => html`
-        <tr>
+        <tr
+          draggable="true"
+          @dragstart=${event =>
+            event.dataTransfer.setData(
+              'text/plain',
+              JSON.stringify({ source: 'product', data: item }),
+            )}
+        >
           ${this.buildRow(item, idx)}
         </tr>
       `,

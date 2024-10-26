@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+/* eslint-disable no-alert */
 /* eslint-disable class-methods-use-this */
 /* eslint-disable no-unused-vars */
 /**
@@ -98,6 +100,28 @@ export class Category extends LitElement {
     return false;
   }
 
+  async swapProductCategory(productId, categoryId) {
+    try {
+      const response = await asyncFetch(
+        'GET',
+        window.sqlHost,
+        `/product-service/product/swap/${productId}/${categoryId}`,
+        window.token,
+        window.username,
+      );
+      if (!response.ok) {
+        throw new Error(`Response status: ${response.status}`);
+      }
+      const data = await response.json();
+      // if (data) this.catRaw = [...data];
+      document.dispatchEvent(
+        new CustomEvent('swap-product-category', { detail: data }),
+      );
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
   listenCancelDetail(event) {
     if (event.detail.back) {
       this.mode = event.detail.back;
@@ -141,6 +165,8 @@ export class Category extends LitElement {
     }
     if (event.detail.source === 'product') {
       // write code to move drag product to targetNode. (Change catId to id of targetNode)
+      console.log('dragg and drop: ', event.detail);
+      this.swapProductCategory(event.detail.drag.Id, event.detail.target.id);
     }
   }
 
