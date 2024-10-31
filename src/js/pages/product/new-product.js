@@ -17,6 +17,10 @@ export class NewProduct extends LitElement {
     classPriceID: { type: String },
     segmentID: { type: String },
     comment: { type: String },
+    initStock: { type: Number },
+    holdingStock: { type: Number },
+    currentStock: { type: Number },
+    warehouseId: { type: Number },
     catName: { type: String },
     productRel: { type: Array },
   };
@@ -35,25 +39,14 @@ export class NewProduct extends LitElement {
     this.classPriceID = '';
     this.segmentID = '';
     this.comment = '';
+    this.initStock = 0;
+    this.currentStock = 0;
+    this.holdingStock = 0;
+    this.warehouseId = 1;
   }
 
   async saveProduct(event) {
     event.preventDefault();
-    // console.log('data to save: ', {
-    //   nameStr: this.nameStr,
-    //   MeasID: this.MeasID,
-    //   extraCategoryID: this.extraCategoryID,
-    //   minimumStock: this.minimumStock,
-    //   mayBeBuy: this.mayBeBuy,
-    //   mayBeSell: this.mayBeSell,
-    //   mayBeProduce: this.mayBeProduce,
-    //   canSellWithOutStock: this.canSellWithOutStock,
-    //   disContinue: this.disContinue,
-    //   classPriceID: this.classPriceID,
-    //   segmentID: this.segmentID,
-    //   comment: this.comment,
-    // });
-
     try {
       const response = await asyncFetch(
         'POST',
@@ -74,6 +67,10 @@ export class NewProduct extends LitElement {
           classPriceID: this.classPriceID,
           segmentID: this.segmentID,
           comment: this.comment,
+          initStock: this.initStock,
+          holdingStock: this.holdingStock,
+          currentStock: this.currentStock,
+          warehouseId: this.warehouseId,
         },
       );
       if (!response.ok) {
@@ -124,6 +121,11 @@ export class NewProduct extends LitElement {
   classSelected(event) {
     this.classPriceID = event.detail.id;
     // console.log('class selected', event);
+  }
+
+  warehouseSelected(event) {
+    console.log('warehouse selected', event.detail);
+    this.warehouseId = event.detail;
   }
 
   render() {
@@ -217,6 +219,32 @@ export class NewProduct extends LitElement {
           <newsky-select-class
             @class-select=${this.classSelected}
           ></newsky-select-class>
+        </div>
+        <div class="w3-col m6" style="padding-left: 10px">
+          <label>Hiện đang lưu ở kho</label>
+          <newsky-select-warehouse
+            @warehouse-change=${this.warehouseSelected}
+          ></newsky-select-warehouse>
+        </div>
+      </div>
+      <div class="w3-row" style="padding-top: 20px">
+        <div class="w3-col m6">
+          <label>Tồn đầu kỳ</label>
+          <input
+            class="w3-input w3-border"
+            type="text"
+            .value=${this.initStock}
+            @input=${e => (this.initStock = e.target.value)}
+          />
+        </div>
+        <div class="w3-col m6" style="padding-left: 10px">
+          <label>Nhu cầu sử dụng đầu kỳ</label>
+          <input
+            class="w3-input w3-border"
+            type="text"
+            .value=${this.initStock}
+            @input=${e => (this.initStock = e.target.value)}
+          />
         </div>
       </div>
       <div class="w3-row" style="padding-top: 20px">

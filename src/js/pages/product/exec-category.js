@@ -8,6 +8,7 @@ import { NewskyCategoryChain } from '../../component/newsky-category-chain.js';
 import { NewskySelectClass } from '../../component/newsky-select-class.js';
 import { ShowListAttribute } from '../../component/newsky-list-attribute.js';
 import { NewskyManageAttribute } from '../../component/newsky-manage-attribute.js';
+import { NewskySelectWarehouse } from '../../component/newsky-select-warehouse.js';
 
 import { EditCategory } from './edit-category.js';
 import { NewCategory } from './new-category.js';
@@ -29,6 +30,7 @@ customElements.define('newsky-category-chain', NewskyCategoryChain);
 customElements.define('newsky-select-class', NewskySelectClass);
 customElements.define('show-list-attribute', ShowListAttribute);
 customElements.define('newsky-manage-attribute', NewskyManageAttribute);
+customElements.define('newsky-select-warehouse', NewskySelectWarehouse);
 
 customElements.define('edit-category', EditCategory);
 customElements.define('new-category', NewCategory);
